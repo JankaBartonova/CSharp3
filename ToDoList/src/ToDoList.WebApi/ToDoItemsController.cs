@@ -113,7 +113,47 @@ public class ToDoItemsController : ControllerBase
     [HttpPut("{toDoItemId:int}")]
     public IActionResult UpdateById(int toDoItemId, [FromBody] ToDoItemUpdateRequestDto request)
     {
-        return Ok();
+
+        if (toDoItemId <= 0)
+        {
+            return BadRequest("toDoItemId must be greater than zero");
+        }
+
+        if (request == null)
+        {
+            return BadRequest("Request body is required");
+        }
+
+        ToDoItem item = request.ToDomain();
+
+        if (string.IsNullOrEmpty(item.Name))
+        {
+            return BadRequest("Name is required");
+        }
+
+        if (string.IsNullOrEmpty(item.Description))
+        {
+            return BadRequest("Name is required");
+        }
+
+        try
+        {
+            int index = items.FindIndex(i => i.ToDoItemId == toDoItemId);
+            if (index == -1)
+            {
+                return NotFound($"ToDo with id {toDoItemId} not found");
+            }
+
+            items[index].Name = item.Name;
+            items[index].Description = item.Description;
+            items[index].IsCompleted = item.IsCompleted;
+        }
+        catch (Exception ex)
+        {
+            return Problem(ex.Message, null, StatusCodes.Status500InternalServerError);
+        }
+
+        return NoContent();
     }
 
     [HttpDelete("{toDoItemId:int}")]
