@@ -1,5 +1,6 @@
 namespace ToDoList.WebApi;
 
+using System.Security.Cryptography.X509Certificates;
 using Microsoft.AspNetCore.Mvc;
 using ToDoList.Domain.DTOs;
 using ToDoList.Domain.Models;
@@ -71,15 +72,42 @@ public class ToDoItemsController : ControllerBase
     [HttpGet("{toDoItemId:int}")]
     public IActionResult ReadById(int toDoItemId)
     {
+        //localhost:5000/api/todoitems/1
+        //if toDoItemId is not provided, the request will not match this action
+        //if toDoItemId is not an integer, the request will not match this action
+
+        if (toDoItemId <= 0)
+        {
+            return BadRequest("toDoItemId must be greater than zero");
+        }
+
+        ToDoItemGetResponseDto result = null;
         try
         {
-            throw new Exception("Something happend");
+            if (items.Count == 0)
+            {
+                return Problem("No ToDos found", null, StatusCodes.Status404NotFound);
+            }
+
+            if (items.Find(i => i.ToDoItemId == toDoItemId) == null)
+            {
+                return NotFound($"ToDo with id {toDoItemId} not found");
+            }
+
+            /*if (!items.Any(i => i.ToDoItemId == toDoItemId))
+            {
+                return NotFound($"ToDo with id {toDoItemId} not found");
+            }*/
+
+            ToDoItem item = items.First(i => i.ToDoItemId == toDoItemId);
+            result = new ToDoItemGetResponseDto(item);
         }
         catch (Exception ex)
         {
             return Problem(ex.Message, null, StatusCodes.Status500InternalServerError);
         }
-        return Ok();
+
+        return Ok(result);
     }
 
     [HttpPut("{toDoItemId:int}")]
