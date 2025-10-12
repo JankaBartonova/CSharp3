@@ -47,7 +47,25 @@ public class ToDoItemsController : ControllerBase
     [HttpGet]
     public IActionResult Read()
     {
-        return Ok();
+        List<ToDoItemGetResponseDto> result = new();
+
+        try
+        {
+            if (items.Count > 0)
+            {
+                result = items.Select(i => new ToDoItemGetResponseDto(i)).ToList();
+            }
+            else
+            {
+                return Problem("No ToDos found", null, StatusCodes.Status404NotFound);
+            }
+        }
+        catch (Exception ex)
+        {
+            return Problem(ex.Message, null, StatusCodes.Status500InternalServerError);
+        }
+
+        return Ok(result);
     }
 
     [HttpGet("{toDoItemId:int}")]
