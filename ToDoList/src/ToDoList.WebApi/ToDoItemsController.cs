@@ -159,6 +159,26 @@ public class ToDoItemsController : ControllerBase
     [HttpDelete("{toDoItemId:int}")]
     public IActionResult DeleteById(int toDoItemId)
     {
-        return Ok();
+        if (toDoItemId <= 0)
+        {
+            return BadRequest("toDoItemId must be greater than zero");
+        }
+
+        try
+        {
+            ToDoItem existing = items.Find(i => i.ToDoItemId == toDoItemId);
+            if (existing == null)
+            {
+                return NotFound($"ToDo with id {toDoItemId} not found");
+            }
+
+            items.Remove(existing);
+        }
+        catch (Exception ex)
+        {
+            return Problem(ex.Message, null, StatusCodes.Status500InternalServerError);
+        }
+
+        return NoContent();
     }
 }
