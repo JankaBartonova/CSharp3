@@ -14,7 +14,34 @@ public class ToDoItemsController : ControllerBase
     [HttpPost]
     public IActionResult Create(ToDoItemCreateRequestDto request) //localhost:5000/api/todoitems, DTO Data Transfer Object
     {
-        return Ok();
+        ToDoItem item = request.ToDomain();
+
+        if (string.IsNullOrEmpty(item.Name))
+        {
+            return BadRequest("Name is required");
+        }
+
+        if (items.Any(i => i.Name == item.Name))
+        {
+            return Conflict("Item with the same name already exists");
+        }
+
+        try
+        {
+            item.ToDoItemId = items.Count > 0 ? items.Max(i => i.ToDoItemId) + 1 : 1;
+            items.Add(item);
+        }
+        catch (Exception ex)
+        {
+            return Problem(ex.Message, null, StatusCodes.Status500InternalServerError);
+        }
+
+        string location = Url.Action(nameof(ReadById), "ToDoItems", new { toDoItemId = item.ToDoItemId }, Request.Scheme);
+        ToDoItemCreateResponseDto result = new(Url: location, Item: item);
+
+        return CreatedAtAction(nameof(ReadById), new { toDoItemId = item.ToDoItemId }, item); // 201 + location in header + item in body
+        //return Created(location, result); // 201 + location in header + location and item in body
+        //return CreatedAtAction(nameof(ReadById), "ToDoItems", new { toDoItemId = item.ToDoItemId }, result); // 201 + location in header + location and item in body
     }
 
     [HttpGet]
