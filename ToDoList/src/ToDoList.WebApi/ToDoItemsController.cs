@@ -1,6 +1,5 @@
 namespace ToDoList.WebApi;
 
-using System.Security.Cryptography.X509Certificates;
 using Microsoft.AspNetCore.Mvc;
 using ToDoList.Domain.DTOs;
 using ToDoList.Domain.Models;
@@ -37,7 +36,7 @@ public class ToDoItemsController : ControllerBase
             return Problem(ex.Message, null, StatusCodes.Status500InternalServerError);
         }
 
-        string location = Url.Action(nameof(ReadById), "ToDoItems", new { toDoItemId = item.ToDoItemId }, Request.Scheme);
+        string location = Url.Action(nameof(ReadById), "ToDoItems", new { toDoItemId = item.ToDoItemId }, Request.Scheme) ?? string.Empty;
         ToDoItemCreateResponseDto result = new(Url: location, Item: item);
 
         return CreatedAtAction(nameof(ReadById), new { toDoItemId = item.ToDoItemId }, item); // 201 + location in header + item in body
@@ -81,7 +80,7 @@ public class ToDoItemsController : ControllerBase
             return BadRequest("toDoItemId must be greater than zero");
         }
 
-        ToDoItemGetResponseDto result = null;
+        ToDoItemGetResponseDto result;
         try
         {
             if (items.Count == 0)
@@ -89,18 +88,15 @@ public class ToDoItemsController : ControllerBase
                 return Problem("No ToDos found", null, StatusCodes.Status404NotFound);
             }
 
-            if (items.Find(i => i.ToDoItemId == toDoItemId) == null)
+            ToDoItem? item = items.Find(i => i.ToDoItemId == toDoItemId);
+            if (item == null)
             {
                 return NotFound($"ToDo with id {toDoItemId} not found");
             }
-
-            /*if (!items.Any(i => i.ToDoItemId == toDoItemId))
+            else
             {
-                return NotFound($"ToDo with id {toDoItemId} not found");
-            }*/
-
-            ToDoItem item = items.First(i => i.ToDoItemId == toDoItemId);
-            result = new ToDoItemGetResponseDto(item);
+                result = new ToDoItemGetResponseDto(item);
+            }
         }
         catch (Exception ex)
         {
@@ -166,7 +162,7 @@ public class ToDoItemsController : ControllerBase
 
         try
         {
-            ToDoItem existing = items.Find(i => i.ToDoItemId == toDoItemId);
+            ToDoItem? existing = items.Find(i => i.ToDoItemId == toDoItemId);
             if (existing == null)
             {
                 return NotFound($"ToDo with id {toDoItemId} not found");
