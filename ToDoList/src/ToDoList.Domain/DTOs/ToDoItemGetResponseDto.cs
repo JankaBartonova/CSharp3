@@ -2,7 +2,7 @@ namespace ToDoList.Domain.DTOs;
 
 using ToDoList.Domain.Models;
 
-public record class ToDoItemGetResponseDto(ToDoItem item)
+public record class ToDoItemGetResponseDto(ToDoItem Item)
 {
 
 }
