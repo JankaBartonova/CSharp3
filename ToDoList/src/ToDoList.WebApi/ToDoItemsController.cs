@@ -177,4 +177,9 @@ public class ToDoItemsController : ControllerBase
 
         return NoContent();
     }
+
+    public void AddItemToStorage(ToDoItem item)
+    {
+        items.Add(item);
+    }
 }
