@@ -6,7 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 var app = builder.Build();
 {
-    // Configure Middleware (HTTP request pipeline)
+    //Configure Middleware (HTTP request pipeline)
     app.MapControllers();
 }
 
