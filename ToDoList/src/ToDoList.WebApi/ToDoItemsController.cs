@@ -9,7 +9,7 @@ using ToDoList.Domain.Models;
 public class ToDoItemsController : ControllerBase
 {
 
-    private static List<ToDoItem> items = [];
+    private List<ToDoItem> items = [];
 
     [HttpPost]
     public IActionResult Create(ToDoItemCreateRequestDto request) //localhost:5000/api/todoitems, DTO Data Transfer Object
@@ -36,16 +36,12 @@ public class ToDoItemsController : ControllerBase
             return Problem(ex.Message, null, StatusCodes.Status500InternalServerError);
         }
 
-        string location = Url.Action(nameof(ReadById), "ToDoItems", new { toDoItemId = item.ToDoItemId }, Request.Scheme) ?? string.Empty;
-        ToDoItemCreateResponseDto result = new(Url: location, Item: item);
 
         return CreatedAtAction(nameof(ReadById), new { toDoItemId = item.ToDoItemId }, item); // 201 + location in header + item in body
-        //return Created(location, result); // 201 + location in header + location and item in body
-        //return CreatedAtAction(nameof(ReadById), "ToDoItems", new { toDoItemId = item.ToDoItemId }, result); // 201 + location in header + location and item in body
     }
 
     [HttpGet]
-    public IActionResult Read()
+    public ActionResult<IEnumerable<ToDoItemGetResponseDto>> Read()
     {
         List<ToDoItemGetResponseDto> result = new();
 
@@ -53,7 +49,7 @@ public class ToDoItemsController : ControllerBase
         {
             if (items.Count > 0)
             {
-                result = items.Select(i => new ToDoItemGetResponseDto(i)).ToList();
+                result = items.Select(i => new ToDoItemGetResponseDto(i.ToDoItemId, i.Name, i.Description, i.IsCompleted)).ToList();
             }
             else
             {
@@ -69,11 +65,9 @@ public class ToDoItemsController : ControllerBase
     }
 
     [HttpGet("{toDoItemId:int}")]
-    public IActionResult ReadById(int toDoItemId)
+    public ActionResult<ToDoItemGetResponseDto?> ReadById(int toDoItemId)
     {
         //localhost:5000/api/todoitems/1
-        //if toDoItemId is not provided, the request will not match this action
-        //if toDoItemId is not an integer, the request will not match this action
 
         if (toDoItemId <= 0)
         {
@@ -95,15 +89,13 @@ public class ToDoItemsController : ControllerBase
             }
             else
             {
-                result = new ToDoItemGetResponseDto(item);
+                return Ok(new ToDoItemGetResponseDto(item.ToDoItemId, item.Name, item.Description, item.IsCompleted));
             }
         }
         catch (Exception ex)
         {
             return Problem(ex.Message, null, StatusCodes.Status500InternalServerError);
         }
-
-        return Ok(result);
     }
 
     [HttpPut("{toDoItemId:int}")]
