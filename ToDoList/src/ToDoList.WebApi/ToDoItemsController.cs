@@ -74,7 +74,6 @@ public class ToDoItemsController : ControllerBase
             return BadRequest("toDoItemId must be greater than zero");
         }
 
-        ToDoItemGetResponseDto result;
         try
         {
             if (items.Count == 0)
