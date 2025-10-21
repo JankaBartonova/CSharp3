@@ -3,6 +3,7 @@ namespace ToDoList.WebApi;
 using Microsoft.AspNetCore.Mvc;
 using ToDoList.Domain.DTOs;
 using ToDoList.Domain.Models;
+using ToDoList.Persistence;
 
 [Route("api/[controller]")] //localhost:5000/api/todoitems
 [ApiController]
@@ -10,6 +11,22 @@ public class ToDoItemsController : ControllerBase
 {
 
     private List<ToDoItem> items = [];
+    private readonly ToDoItemsContext context;
+    public ToDoItemsController(ToDoItemsContext context)
+    {
+        this.context = context;
+
+        // ToDoItem item = new ToDoItem
+        // {
+        //     ToDoItemId = 1,
+        //     Name = "Prvni ukol",
+        //     Description = "Prvni popis",
+        //     IsCompleted = false
+        // };
+
+        // context.ToDoItems.Add(item);
+        // context.SaveChanges();
+    }
 
     [HttpPost]
     public IActionResult Create(ToDoItemCreateRequestDto request) //localhost:5000/api/todoitems, DTO Data Transfer Object
@@ -21,15 +38,17 @@ public class ToDoItemsController : ControllerBase
             return BadRequest("Name is required");
         }
 
-        if (items.Any(i => i.Name == item.Name))
+        /*if (items.Any(i => i.Name == item.Name))
         {
             return Conflict("Item with the same name already exists");
-        }
+        }*/
 
         try
         {
-            item.ToDoItemId = items.Count > 0 ? items.Max(i => i.ToDoItemId) + 1 : 1;
-            items.Add(item);
+            //item.ToDoItemId = items.Count > 0 ? items.Max(i => i.ToDoItemId) + 1 : 1;
+            //items.Add(item);
+            context.ToDoItems.Add(item);
+            context.SaveChanges();
         }
         catch (Exception ex)
         {
