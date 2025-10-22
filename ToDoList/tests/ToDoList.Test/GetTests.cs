@@ -1,5 +1,6 @@
 namespace ToDoList.Test;
 
+using Xunit;
 using ToDoList.Domain.Models;
 using ToDoList.WebApi;
 
@@ -9,11 +10,11 @@ public class GetTests
     public void Get_AllItems_ShouldReturnAllItems()
     {
         // Arrange
-        var toDoItem = new ToDoItem
+        var toDoItem1 = new ToDoItem
         {
             ToDoItemId = 1,
-            Name = "Test Item",
-            Description = "Popis",
+            Name = "Test Item 1",
+            Description = "Popis 1",
             IsCompleted = false
         };
 
@@ -25,11 +26,19 @@ public class GetTests
             IsCompleted = true
         };
         var controller = new ToDoItemsController();
-        controller.AddItemToStorage(toDoItem);
+        controller.AddItemToStorage(toDoItem1);
         controller.AddItemToStorage(toDoItem2);
 
         // Act
         var result = controller.Read();
-        var value = result;
+        var value = result.GetValue();
+
+        // Assert
+        Assert.NotNull(value);
+
+        var firstToDo = value.First();
+        Assert.Equal(1, firstToDo.Id);
+        Assert.Equal("Test Item 1", firstToDo.Name);
+        Assert.Equal("Popis 1", firstToDo.Description);
     }
 }
