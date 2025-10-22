@@ -3,6 +3,7 @@ namespace ToDoList.Test;
 using Xunit;
 using Microsoft.AspNetCore.Mvc;
 using ToDoList.Domain.Models;
+using ToDoList.Domain.DTOs;
 using ToDoList.WebApi;
 
 public class DeleteTests
@@ -24,9 +25,12 @@ public class DeleteTests
 
         // Act
         var result = controller.DeleteById(1);
+        var getResult = controller.ReadById(1);
+        var getItem = getResult.GetOther<ProblemDetails, ToDoItemGetResponseDto>();
 
         // Assert
         Assert.IsType<NoContentResult>(result);
+        Assert.Equal(404, getItem.Status);
     }
 
     [Fact]

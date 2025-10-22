@@ -27,9 +27,14 @@ public class PutTests
 
         // Act
         var result = controller.UpdateById(1, updatedItem);
+        var getResult = controller.ReadById(1);
+        var getItem = getResult.GetValue<ToDoItemGetResponseDto>();
 
         // Assert
         Assert.IsType<NoContentResult>(result);
+        Assert.Equal("Updated Item", getItem.Name);
+        Assert.Equal("Updated Popis", getItem.Description);
+        Assert.True(getItem.IsCompleted);
     }
 
     [Fact]
