@@ -12,13 +12,14 @@ public static class ActionResultExtensions
 
         var objectResult = result.Result as ObjectResult;
         if (objectResult != null)
+        {
             if (objectResult.Value is T t)
                 return t;
             else
             {
                 throw new InvalidCastException($"Cannot cast ObjectResult.Value of type {objectResult.Value?.GetType().FullName} to {typeof(T).FullName}");
             }
-
+        }
         return default;
     }
 
@@ -26,13 +27,14 @@ public static class ActionResultExtensions
     {
         var objectResult = result.Result as ObjectResult;
         if (objectResult != null)
+        {
             if (objectResult.Value is T t)
                 return t;
             else
             {
                 throw new InvalidCastException($"Cannot cast ObjectResult.Value of type {objectResult.Value?.GetType().FullName} to {typeof(T).FullName}");
             }
-
+        }
         return default;
     }
 }
