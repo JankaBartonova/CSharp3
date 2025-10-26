@@ -2,9 +2,8 @@ namespace ToDoList.Test;
 
 using Xunit;
 using ToDoList.Domain.Models;
-using ToDoList.Persistence;
 using ToDoList.WebApi;
-using Microsoft.EntityFrameworkCore;
+using static ToDoList.Test.DbContextHelper;
 
 public class GetTests
 {
@@ -28,9 +27,7 @@ public class GetTests
             IsCompleted = true
         };
 
-        using var context = new ToDoItemsContext("DataSource=:memory:");
-        context.Database.OpenConnection();
-        context.Database.EnsureCreated();
+        using var context = CreateInMemoryContext();
 
         var controller = new ToDoItemsController(context);
         context.ToDoItems.Add(toDoItem1);

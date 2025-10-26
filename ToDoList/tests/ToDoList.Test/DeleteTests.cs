@@ -5,8 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using ToDoList.Domain.Models;
 using ToDoList.Domain.DTOs;
 using ToDoList.WebApi;
-using ToDoList.Persistence;
-using Microsoft.EntityFrameworkCore;
+using static ToDoList.Test.DbContextHelper;
 
 public class DeleteTests
 {
@@ -22,9 +21,7 @@ public class DeleteTests
             IsCompleted = false
         };
 
-        using var context = new ToDoItemsContext("DataSource=:memory:");
-        context.Database.OpenConnection();
-        context.Database.EnsureCreated();
+        using var context = CreateInMemoryContext();
 
         var controller = new ToDoItemsController(context);
         context.ToDoItems.Add(toDoItem);
@@ -52,9 +49,7 @@ public class DeleteTests
             IsCompleted = false
         };
 
-        using var context = new ToDoItemsContext("DataSource=:memory:");
-        context.Database.OpenConnection();
-        context.Database.EnsureCreated();
+        using var context = CreateInMemoryContext();
 
         var controller = new ToDoItemsController(context);
         context.ToDoItems.Add(toDoItem);

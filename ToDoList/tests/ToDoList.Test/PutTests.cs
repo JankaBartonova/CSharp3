@@ -5,8 +5,7 @@ using ToDoList.Domain.Models;
 using ToDoList.Domain.DTOs;
 using ToDoList.WebApi;
 using Microsoft.AspNetCore.Mvc;
-using ToDoList.Persistence;
-using Microsoft.EntityFrameworkCore;
+using static ToDoList.Test.DbContextHelper;
 
 public class PutTests
 {
@@ -22,9 +21,7 @@ public class PutTests
             IsCompleted = false
         };
 
-        using var context = new ToDoItemsContext("DataSource=:memory:");
-        context.Database.OpenConnection();
-        context.Database.EnsureCreated();
+        using var context = CreateInMemoryContext();
 
         var controller = new ToDoItemsController(context);
         context.ToDoItems.Add(toDoItem);
@@ -56,15 +53,13 @@ public class PutTests
             IsCompleted = false
         };
 
-        using var context = new ToDoItemsContext("DataSource=:memory:");
-        context.Database.OpenConnection();
-        context.Database.EnsureCreated();
+        using var context = CreateInMemoryContext();
 
         var controller = new ToDoItemsController(context);
         context.ToDoItems.Add(toDoItem);
         context.SaveChanges();
 
-        var updatedItem = new ToDoItemUpdateRequestDto("Updated Item", "Updated Popis", true);
+        var updatedItem = new ToDoItemUpdateRequestDto("Updated Item", "Updated Description", true);
 
         // Act
         var result = controller.UpdateById(999, updatedItem);

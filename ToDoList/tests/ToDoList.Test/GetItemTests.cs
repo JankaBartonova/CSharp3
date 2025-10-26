@@ -5,8 +5,7 @@ using ToDoList.Domain.Models;
 using ToDoList.WebApi;
 using Microsoft.AspNetCore.Mvc;
 using ToDoList.Domain.DTOs;
-using ToDoList.Persistence;
-using Microsoft.EntityFrameworkCore;
+using static ToDoList.Test.DbContextHelper;
 
 public class GetItemTests
 {
@@ -22,9 +21,7 @@ public class GetItemTests
             IsCompleted = false
         };
 
-        using var context = new ToDoItemsContext("DataSource=:memory:");
-        context.Database.OpenConnection();
-        context.Database.EnsureCreated();
+        using var context = CreateInMemoryContext();
 
         var controller = new ToDoItemsController(context);
         context.ToDoItems.Add(toDoItem);
@@ -44,9 +41,7 @@ public class GetItemTests
     public void Get_NonExistingItem_ShouldReturnNotFound()
     {
         // Arrange
-        using var context = new ToDoItemsContext("DataSource=:memory:");
-        context.Database.OpenConnection();
-        context.Database.EnsureCreated();
+        using var context = CreateInMemoryContext();
 
         var controller = new ToDoItemsController(context);
 
