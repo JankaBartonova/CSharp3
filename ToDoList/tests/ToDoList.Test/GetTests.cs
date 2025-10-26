@@ -2,7 +2,9 @@ namespace ToDoList.Test;
 
 using Xunit;
 using ToDoList.Domain.Models;
+using ToDoList.Persistence;
 using ToDoList.WebApi;
+using Microsoft.EntityFrameworkCore;
 
 public class GetTests
 {
@@ -14,7 +16,7 @@ public class GetTests
         {
             ToDoItemId = 1,
             Name = "Test Item 1",
-            Description = "Popis 1",
+            Description = "Description 1",
             IsCompleted = false
         };
 
@@ -22,12 +24,18 @@ public class GetTests
         {
             ToDoItemId = 2,
             Name = "Test Item 2",
-            Description = "Popis 2",
+            Description = "Description 2",
             IsCompleted = true
         };
-        var controller = new ToDoItemsController();
-        controller.AddItemToStorage(toDoItem1);
-        controller.AddItemToStorage(toDoItem2);
+
+        using var context = new ToDoItemsContext("DataSource=:memory:");
+        context.Database.OpenConnection();
+        context.Database.EnsureCreated();
+
+        var controller = new ToDoItemsController(context);
+        context.ToDoItems.Add(toDoItem1);
+        context.ToDoItems.Add(toDoItem2);
+        context.SaveChanges();
 
         // Act
         var result = controller.Read();
@@ -39,6 +47,6 @@ public class GetTests
         var firstToDo = value.First();
         Assert.Equal(1, firstToDo.Id);
         Assert.Equal("Test Item 1", firstToDo.Name);
-        Assert.Equal("Popis 1", firstToDo.Description);
+        Assert.Equal("Description 1", firstToDo.Description);
     }
 }

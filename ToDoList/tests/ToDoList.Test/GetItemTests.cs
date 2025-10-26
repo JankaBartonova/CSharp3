@@ -5,6 +5,8 @@ using ToDoList.Domain.Models;
 using ToDoList.WebApi;
 using Microsoft.AspNetCore.Mvc;
 using ToDoList.Domain.DTOs;
+using ToDoList.Persistence;
+using Microsoft.EntityFrameworkCore;
 
 public class GetItemTests
 {
@@ -16,12 +18,17 @@ public class GetItemTests
         {
             ToDoItemId = 1,
             Name = "Test Item",
-            Description = "Popis",
+            Description = "Description",
             IsCompleted = false
         };
 
-        var controller = new ToDoItemsController();
-        controller.AddItemToStorage(toDoItem);
+        using var context = new ToDoItemsContext("DataSource=:memory:");
+        context.Database.OpenConnection();
+        context.Database.EnsureCreated();
+
+        var controller = new ToDoItemsController(context);
+        context.ToDoItems.Add(toDoItem);
+        context.SaveChanges();
 
         // Act
         var result = controller.ReadById(1);
@@ -30,14 +37,18 @@ public class GetItemTests
         // Assert
         Assert.NotNull(value);
         Assert.Equal("Test Item", value.Name);
-        Assert.Equal("Popis", value.Description);
+        Assert.Equal("Description", value.Description);
     }
 
     [Fact]
     public void Get_NonExistingItem_ShouldReturnNotFound()
     {
         // Arrange
-        var controller = new ToDoItemsController();
+        using var context = new ToDoItemsContext("DataSource=:memory:");
+        context.Database.OpenConnection();
+        context.Database.EnsureCreated();
+
+        var controller = new ToDoItemsController(context);
 
         // Act
         var result = controller.ReadById(999);

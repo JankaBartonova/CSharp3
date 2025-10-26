@@ -5,6 +5,8 @@ using ToDoList.Domain.Models;
 using ToDoList.Domain.DTOs;
 using ToDoList.WebApi;
 using Microsoft.AspNetCore.Mvc;
+using ToDoList.Persistence;
+using Microsoft.EntityFrameworkCore;
 
 public class PutTests
 {
@@ -16,14 +18,19 @@ public class PutTests
         {
             ToDoItemId = 1,
             Name = "Test Item",
-            Description = "Popis",
+            Description = "Description",
             IsCompleted = false
         };
 
-        var controller = new ToDoItemsController();
-        controller.AddItemToStorage(toDoItem);
+        using var context = new ToDoItemsContext("DataSource=:memory:");
+        context.Database.OpenConnection();
+        context.Database.EnsureCreated();
 
-        var updatedItem = new ToDoItemUpdateRequestDto("Updated Item", "Updated Popis", true);
+        var controller = new ToDoItemsController(context);
+        context.ToDoItems.Add(toDoItem);
+        context.SaveChanges();
+
+        var updatedItem = new ToDoItemUpdateRequestDto("Updated Item", "Updated Description", true);
 
         // Act
         var result = controller.UpdateById(1, updatedItem);
@@ -33,7 +40,7 @@ public class PutTests
         // Assert
         Assert.IsType<NoContentResult>(result);
         Assert.Equal("Updated Item", getItem.Name);
-        Assert.Equal("Updated Popis", getItem.Description);
+        Assert.Equal("Updated Description", getItem.Description);
         Assert.True(getItem.IsCompleted);
     }
 
@@ -41,8 +48,23 @@ public class PutTests
     public void Put_NotExistingItem_ShouldReturnNotFound()
     {
         // Arrange
+        var toDoItem = new ToDoItem
+        {
+            ToDoItemId = 1,
+            Name = "Test Item",
+            Description = "Description",
+            IsCompleted = false
+        };
+
+        using var context = new ToDoItemsContext("DataSource=:memory:");
+        context.Database.OpenConnection();
+        context.Database.EnsureCreated();
+
+        var controller = new ToDoItemsController(context);
+        context.ToDoItems.Add(toDoItem);
+        context.SaveChanges();
+
         var updatedItem = new ToDoItemUpdateRequestDto("Updated Item", "Updated Popis", true);
-        var controller = new ToDoItemsController();
 
         // Act
         var result = controller.UpdateById(999, updatedItem);

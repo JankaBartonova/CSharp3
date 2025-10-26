@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 using ToDoList.Domain.Models;
 using ToDoList.Domain.DTOs;
 using ToDoList.WebApi;
+using ToDoList.Persistence;
+using Microsoft.EntityFrameworkCore;
 
 public class DeleteTests
 {
@@ -16,12 +18,17 @@ public class DeleteTests
         {
             ToDoItemId = 1,
             Name = "Test Item",
-            Description = "Popis",
+            Description = "Description",
             IsCompleted = false
         };
 
-        var controller = new ToDoItemsController();
-        controller.AddItemToStorage(toDoItem);
+        using var context = new ToDoItemsContext("DataSource=:memory:");
+        context.Database.OpenConnection();
+        context.Database.EnsureCreated();
+
+        var controller = new ToDoItemsController(context);
+        context.ToDoItems.Add(toDoItem);
+        context.SaveChanges();
 
         // Act
         var result = controller.DeleteById(1);
@@ -37,7 +44,21 @@ public class DeleteTests
     public void Delete_NonExistingItem_ShouldReturnNotFound()
     {
         // Arrange
-        var controller = new ToDoItemsController();
+        var toDoItem = new ToDoItem
+        {
+            ToDoItemId = 1,
+            Name = "Test Item",
+            Description = "Description",
+            IsCompleted = false
+        };
+
+        using var context = new ToDoItemsContext("DataSource=:memory:");
+        context.Database.OpenConnection();
+        context.Database.EnsureCreated();
+
+        var controller = new ToDoItemsController(context);
+        context.ToDoItems.Add(toDoItem);
+        context.SaveChanges();
 
         // Act
         var result = controller.DeleteById(999);
