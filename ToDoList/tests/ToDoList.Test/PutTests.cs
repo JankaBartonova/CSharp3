@@ -36,8 +36,6 @@ public class PutTests
         var result = controller.UpdateById(1, updatedItem);
         var getResult = controller.ReadById(1);
         var getItem = getResult.GetValue<ToDoItemGetResponseDto>();
-        var getResult = controller.ReadById(1);
-        var getItem = getResult.GetValue<ToDoItemGetResponseDto>();
 
         // Assert
         Assert.IsType<NoContentResult>(result);
