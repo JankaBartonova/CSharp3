@@ -4,7 +4,7 @@ var builder = WebApplication.CreateBuilder(args);
 {
     //Configure DI
     builder.Services.AddControllers();
-    builder.Services.AddDbContext<ToDoItemsContext>();
+    builder.Services.AddDbContext<ToDoItemsContextBase, ToDoItemsContext>();
 }
 
 var app = builder.Build();

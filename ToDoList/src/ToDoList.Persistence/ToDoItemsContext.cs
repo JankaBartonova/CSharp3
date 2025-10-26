@@ -3,13 +3,12 @@
 using Microsoft.EntityFrameworkCore;
 using ToDoList.Domain.Models;
 
-public class ToDoItemsContext : DbContext
+public class ToDoItemsContextBase : DbContext
 {
     private readonly string connectionString;
-    public ToDoItemsContext(string connectionString = "DataSource=../../data/localdb.db")
+    public ToDoItemsContextBase(string connectionString)
     {
         this.connectionString = connectionString;
-        this.Database.Migrate();
     }
 
     public DbSet<ToDoItem> ToDoItems { get; set; }
@@ -17,5 +16,14 @@ public class ToDoItemsContext : DbContext
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.UseSqlite(connectionString);
+    }
+}
+
+public class ToDoItemsContext : ToDoItemsContextBase
+{
+    public ToDoItemsContext(string connectionString = "DataSource=../../data/localdb.db")
+        : base(connectionString)
+    {
+        this.Database.Migrate();
     }
 }

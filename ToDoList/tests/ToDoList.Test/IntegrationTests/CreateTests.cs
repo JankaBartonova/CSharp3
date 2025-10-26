@@ -6,6 +6,7 @@ using ToDoList.Domain.DTOs;
 using ToDoList.WebApi;
 using Microsoft.AspNetCore.Mvc;
 using static ToDoList.Test.DbContextMemoryHelper;
+
 public class CreateTests
 {
     [Fact]
@@ -20,8 +21,10 @@ public class CreateTests
         );
 
         //simulate in memory database
-        using var context = CreateInMemoryContext();
+        //using var context = CreateInMemoryContext();
 
+        // use production code with TEST database
+        var context = new ToDoItemsContextTest();
         var controller = new ToDoItemsController(context);
 
         // Act
@@ -34,6 +37,10 @@ public class CreateTests
         Assert.Equal(request.Description, createdItem.Description);
         Assert.Equal(request.IsCompleted, createdItem.IsCompleted);
         Assert.Equal(201, createdResult.StatusCode);
+
+        // Clean up
+        context.ToDoItems.Remove(createdItem);
+        context.SaveChanges();
     }
 
     [Fact]

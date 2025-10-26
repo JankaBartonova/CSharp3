@@ -10,8 +10,8 @@ using ToDoList.Persistence;
 public class ToDoItemsController : ControllerBase
 {
 
-    private readonly ToDoItemsContext context;
-    public ToDoItemsController(ToDoItemsContext context)
+    private readonly ToDoItemsContextBase context;
+    public ToDoItemsController(ToDoItemsContextBase context)
     {
         this.context = context;
 
