@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using ToDoList.Domain.Models;
 using ToDoList.Domain.DTOs;
 using ToDoList.WebApi;
-using static ToDoList.Test.DbContextHelper;
+using static ToDoList.Test.DbContextMemoryHelper;
 
 public class DeleteTests
 {

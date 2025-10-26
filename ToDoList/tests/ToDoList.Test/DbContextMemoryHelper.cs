@@ -3,7 +3,7 @@ namespace ToDoList.Test;
 using ToDoList.Persistence;
 using Microsoft.EntityFrameworkCore;
 
-public class DbContextHelper
+public class DbContextMemoryHelper : DbContext
 {
     public static ToDoItemsContext CreateInMemoryContext()
     {

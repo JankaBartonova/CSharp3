@@ -5,7 +5,7 @@ using ToDoList.Domain.Models;
 using ToDoList.WebApi;
 using Microsoft.AspNetCore.Mvc;
 using ToDoList.Domain.DTOs;
-using static ToDoList.Test.DbContextHelper;
+using static ToDoList.Test.DbContextMemoryHelper;
 
 public class GetItemTests
 {

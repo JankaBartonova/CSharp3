@@ -3,7 +3,7 @@ namespace ToDoList.Test;
 using Xunit;
 using ToDoList.Domain.Models;
 using ToDoList.WebApi;
-using static ToDoList.Test.DbContextHelper;
+using static ToDoList.Test.DbContextMemoryHelper;
 
 public class GetTests
 {
