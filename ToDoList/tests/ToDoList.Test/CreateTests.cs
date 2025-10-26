@@ -6,10 +6,10 @@ using ToDoList.Domain.DTOs;
 using ToDoList.WebApi;
 using Microsoft.AspNetCore.Mvc;
 using static ToDoList.Test.DbContextHelper;
+using ToDoList.Persistence;
 
 public class CreateTests
 {
-    //private readonly ToDoItemsContext context;
     [Fact]
     public void Create_ValidItem_ShouldReturnCreatedItem()
     {
