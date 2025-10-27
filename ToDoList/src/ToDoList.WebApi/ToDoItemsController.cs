@@ -3,13 +3,29 @@ namespace ToDoList.WebApi;
 using Microsoft.AspNetCore.Mvc;
 using ToDoList.Domain.DTOs;
 using ToDoList.Domain.Models;
+using ToDoList.Persistence;
 
 [Route("api/[controller]")] //localhost:5000/api/todoitems
 [ApiController]
 public class ToDoItemsController : ControllerBase
 {
 
-    private List<ToDoItem> items = [];
+    private readonly ToDoItemsContextBase context;
+    public ToDoItemsController(ToDoItemsContextBase context)
+    {
+        this.context = context;
+
+        // ToDoItem item = new ToDoItem
+        // {
+        //     ToDoItemId = 1,
+        //     Name = "Prvni ukol",
+        //     Description = "Prvni popis",
+        //     IsCompleted = false
+        // };
+
+        // context.ToDoItems.Add(item);
+        // context.SaveChanges();
+    }
 
     [HttpPost]
     public IActionResult Create(ToDoItemCreateRequestDto request) //localhost:5000/api/todoitems, DTO Data Transfer Object
@@ -21,22 +37,20 @@ public class ToDoItemsController : ControllerBase
             return BadRequest("Name is required");
         }
 
-        if (items.Any(i => i.Name == item.Name))
+        if (context.ToDoItems.Any(i => i.Name == item.Name))
         {
             return Conflict("Item with the same name already exists");
         }
 
         try
         {
-            item.ToDoItemId = items.Count > 0 ? items.Max(i => i.ToDoItemId) + 1 : 1;
-            items.Add(item);
+            context.ToDoItems.Add(item);
+            context.SaveChanges();
         }
         catch (Exception ex)
         {
             return Problem(ex.Message, null, StatusCodes.Status500InternalServerError);
         }
-
-
         return CreatedAtAction(nameof(ReadById), new { toDoItemId = item.ToDoItemId }, item); // 201 + location in header + item in body
     }
 
@@ -47,9 +61,9 @@ public class ToDoItemsController : ControllerBase
 
         try
         {
-            if (items.Count > 0)
+            if (context.ToDoItems.Count() > 0)
             {
-                result = items.Select(i => new ToDoItemGetResponseDto(i.ToDoItemId, i.Name, i.Description, i.IsCompleted)).ToList();
+                result = context.ToDoItems.Select(i => new ToDoItemGetResponseDto(i.ToDoItemId, i.Name, i.Description, i.IsCompleted)).ToList();
             }
             else
             {
@@ -76,12 +90,12 @@ public class ToDoItemsController : ControllerBase
 
         try
         {
-            if (items.Count == 0)
+            if (context.ToDoItems.Count() == 0)
             {
                 return Problem("No ToDos found", null, StatusCodes.Status404NotFound);
             }
 
-            ToDoItem? item = items.Find(i => i.ToDoItemId == toDoItemId);
+            ToDoItem? item = context.ToDoItems.ToList().Find(i => i.ToDoItemId == toDoItemId);
             if (item == null)
             {
                 return NotFound($"ToDo with id {toDoItemId} not found");
@@ -125,6 +139,7 @@ public class ToDoItemsController : ControllerBase
 
         try
         {
+            List<ToDoItem> items = context.ToDoItems.ToList();
             int index = items.FindIndex(i => i.ToDoItemId == toDoItemId);
             if (index == -1)
             {
@@ -134,6 +149,7 @@ public class ToDoItemsController : ControllerBase
             items[index].Name = item.Name;
             items[index].Description = item.Description;
             items[index].IsCompleted = item.IsCompleted;
+            context.SaveChanges();
         }
         catch (Exception ex)
         {
@@ -153,24 +169,19 @@ public class ToDoItemsController : ControllerBase
 
         try
         {
-            ToDoItem? existing = items.Find(i => i.ToDoItemId == toDoItemId);
+            ToDoItem? existing = context.ToDoItems.ToList().Find(i => i.ToDoItemId == toDoItemId);
             if (existing == null)
             {
                 return NotFound($"ToDo with id {toDoItemId} not found");
             }
 
-            items.Remove(existing);
+            context.ToDoItems.Remove(existing);
+            context.SaveChanges();
+            return NoContent();
         }
         catch (Exception ex)
         {
             return Problem(ex.Message, null, StatusCodes.Status500InternalServerError);
         }
-
-        return NoContent();
-    }
-
-    public void AddItemToStorage(ToDoItem item)
-    {
-        items.Add(item);
     }
 }
