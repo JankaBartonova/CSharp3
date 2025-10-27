@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 public class CreateTests
 {
     [Fact]
-    public void Create_ValidItem_ShouldReturnCreatedItem()
+    public async void Create_ValidItem_ShouldReturnCreatedItem()
     {
         // Arrange
         var request = new ToDoItemCreateRequestDto
@@ -40,11 +40,11 @@ public class CreateTests
 
         // Clean up
         context.ToDoItems.Remove(createdItem);
-        context.SaveChanges();
+        await context.SaveChangesAsync();
     }
 
     [Fact]
-    public void Create_ItemWithExistingName_ShouldReturnConflict()
+    public async void Create_ItemWithExistingName_ShouldReturnConflict()
     {
         // Arrange
         var existingItem = new ToDoItem
@@ -58,7 +58,7 @@ public class CreateTests
 
         var context = new ToDoItemsContextTest();
         context.ToDoItems.Add(existingItem);
-        context.SaveChanges();
+        await context.SaveChangesAsync();
 
         var controller = new ToDoItemsController(context);
         var request = new ToDoItemCreateRequestDto
@@ -77,6 +77,6 @@ public class CreateTests
 
         // Clean up
         context.ToDoItems.Remove(existingItem);
-        context.SaveChanges();
+        await context.SaveChangesAsync();
     }
 }

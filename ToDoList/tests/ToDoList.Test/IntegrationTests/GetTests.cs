@@ -8,7 +8,7 @@ using ToDoList.WebApi;
 public class GetTests
 {
     [Fact]
-    public void Get_AllItems_ShouldReturnAllItems()
+    public async void Get_AllItems_ShouldReturnAllItems()
     {
         // Arrange
         var toDoItem1 = new ToDoItem
@@ -29,7 +29,7 @@ public class GetTests
         var context = new ToDoItemsContextTest();
         context.ToDoItems.Add(toDoItem1);
         context.ToDoItems.Add(toDoItem2);
-        context.SaveChanges();
+        await context.SaveChangesAsync();
 
         var controller = new ToDoItemsController(context);
 
@@ -53,6 +53,6 @@ public class GetTests
         // Clean up
         context.ToDoItems.Remove(toDoItem1);
         context.ToDoItems.Remove(toDoItem2);
-        context.SaveChanges();
+        await context.SaveChangesAsync();
     }
 }

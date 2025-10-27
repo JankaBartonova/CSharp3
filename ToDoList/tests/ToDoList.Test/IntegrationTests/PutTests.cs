@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 public class PutTests
 {
     [Fact]
-    public void Put_ExistingItem_ShouldReturnNoContent()
+    public async void Put_ExistingItem_ShouldReturnNoContent()
     {
         // Arrange
         var toDoItem = new ToDoItem
@@ -23,7 +23,7 @@ public class PutTests
         //using var context = CreateInMemoryContext();
         var context = new ToDoItemsContextTest();
         context.ToDoItems.Add(toDoItem);
-        context.SaveChanges();
+        await context.SaveChangesAsync();
         var controller = new ToDoItemsController(context);
 
         var items = controller.Read(); // to get ID of item to be updated
@@ -52,11 +52,11 @@ public class PutTests
 
         // Clean up
         context.ToDoItems.Remove(toDoItem);
-        context.SaveChanges();
+        await context.SaveChangesAsync();
     }
 
     [Fact]
-    public void Put_NotExistingItem_ShouldReturnNotFound()
+    public async void Put_NotExistingItem_ShouldReturnNotFound()
     {
         // Arrange
         var toDoItem = new ToDoItem
@@ -69,7 +69,7 @@ public class PutTests
         //using var context = CreateInMemoryContext();
         var context = new ToDoItemsContextTest();
         context.ToDoItems.Add(toDoItem);
-        context.SaveChanges();
+        await context.SaveChangesAsync();
         var controller = new ToDoItemsController(context);
 
         // get ID of last item to be sure the tested ID does not exist
@@ -88,6 +88,6 @@ public class PutTests
 
         // Clean up
         context.ToDoItems.Remove(toDoItem);
-        context.SaveChanges();
+        await context.SaveChangesAsync();
     }
 }

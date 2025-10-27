@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 public class GetItemTests
 {
     [Fact]
-    public void Get_ExistingItem_ShouldReturnItem()
+    public async void Get_ExistingItem_ShouldReturnItem()
     {
         // Arrange
         var toDoItem = new ToDoItem
@@ -23,7 +23,7 @@ public class GetItemTests
         var context = new ToDoItemsContextTest();
         var controller = new ToDoItemsController(context);
         context.ToDoItems.Add(toDoItem);
-        context.SaveChanges();
+        await context.SaveChangesAsync();
 
         var items = controller.Read(); // to get ID of item to be retrieved
         var itemList = items.GetValue();
@@ -47,11 +47,11 @@ public class GetItemTests
 
         // Clean up
         context.ToDoItems.Remove(toDoItem);
-        context.SaveChanges();
+        await context.SaveChangesAsync();
     }
 
     [Fact]
-    public void Get_NonExistingItem_ShouldReturnNotFound()
+    public async void Get_NonExistingItem_ShouldReturnNotFound()
     {
         // Arrange
         var toDoItem = new ToDoItem
@@ -65,7 +65,7 @@ public class GetItemTests
         var context = new ToDoItemsContextTest();
         var controller = new ToDoItemsController(context);
         context.ToDoItems.Add(toDoItem);
-        context.SaveChanges();
+        await context.SaveChangesAsync();
 
         var items = controller.Read();
         var itemList = items.GetValue();
@@ -82,7 +82,7 @@ public class GetItemTests
 
         // Clean up
         context.ToDoItems.Remove(toDoItem);
-        context.SaveChanges();
+        await context.SaveChangesAsync();
     }
 }
 
