@@ -3,7 +3,7 @@ namespace ToDoList.Test;
 using Xunit;
 using ToDoList.Domain.Models;
 using ToDoList.WebApi;
-using static ToDoList.Test.DbContextMemoryHelper;
+//using static ToDoList.Test.DbContextMemoryHelper;
 
 public class GetTests
 {
@@ -13,7 +13,6 @@ public class GetTests
         // Arrange
         var toDoItem1 = new ToDoItem
         {
-            ToDoItemId = 1,
             Name = "Test Item 1",
             Description = "Description 1",
             IsCompleted = false
@@ -21,18 +20,18 @@ public class GetTests
 
         var toDoItem2 = new ToDoItem
         {
-            ToDoItemId = 2,
             Name = "Test Item 2",
             Description = "Description 2",
             IsCompleted = true
         };
 
-        using var context = CreateInMemoryContext();
-
-        var controller = new ToDoItemsController(context);
+        //using var context = CreateInMemoryContext();
+        var context = new ToDoItemsContextTest();
         context.ToDoItems.Add(toDoItem1);
         context.ToDoItems.Add(toDoItem2);
         context.SaveChanges();
+
+        var controller = new ToDoItemsController(context);
 
         // Act
         var result = controller.Read();
@@ -42,8 +41,18 @@ public class GetTests
         Assert.NotNull(value);
 
         var firstToDo = value.First();
-        Assert.Equal(1, firstToDo.Id);
         Assert.Equal("Test Item 1", firstToDo.Name);
         Assert.Equal("Description 1", firstToDo.Description);
+        Assert.False(firstToDo.IsCompleted);
+
+        var secondToDo = value.Skip(1).First();
+        Assert.Equal("Test Item 2", secondToDo.Name);
+        Assert.Equal("Description 2", secondToDo.Description);
+        Assert.True(secondToDo.IsCompleted);
+
+        // Clean up
+        context.ToDoItems.Remove(toDoItem1);
+        context.ToDoItems.Remove(toDoItem2);
+        context.SaveChanges();
     }
 }

@@ -5,7 +5,7 @@ using ToDoList.Domain.Models;
 using ToDoList.Domain.DTOs;
 using ToDoList.WebApi;
 using Microsoft.AspNetCore.Mvc;
-using static ToDoList.Test.DbContextMemoryHelper;
+//using static ToDoList.Test.DbContextMemoryHelper;
 
 public class CreateTests
 {
@@ -15,8 +15,8 @@ public class CreateTests
         // Arrange
         var request = new ToDoItemCreateRequestDto
         (
-            Name: "AAA",
-            Description: "aaaa",
+            Name: "POST Item",
+            Description: "Description",
             IsCompleted: false
         );
 
@@ -49,20 +49,21 @@ public class CreateTests
         // Arrange
         var existingItem = new ToDoItem
         {
-            ToDoItemId = 1,
-            Name = "Existing Item",
+            Name = "POST Existing Item",
             Description = "Existing Description",
             IsCompleted = false
         };
 
-        using var context = CreateInMemoryContext();
+        //using var context = CreateInMemoryContext();
+
+        var context = new ToDoItemsContextTest();
         context.ToDoItems.Add(existingItem);
         context.SaveChanges();
 
         var controller = new ToDoItemsController(context);
         var request = new ToDoItemCreateRequestDto
         (
-            Name: "Existing Item",
+            Name: "POST Existing Item",
             Description: "New Description",
             IsCompleted: true
         );
@@ -73,5 +74,9 @@ public class CreateTests
         // Assert
         var conflictResult = Assert.IsType<ConflictObjectResult>(result);
         Assert.Equal(409, conflictResult.StatusCode);
+
+        // Clean up
+        context.ToDoItems.Remove(existingItem);
+        context.SaveChanges();
     }
 }
