@@ -7,13 +7,11 @@ using ToDoList.WebApi;
 using Microsoft.AspNetCore.Mvc;
 using NSubstitute;
 using ToDoList.Persistence.Repositories;
-using System.Linq;
-using System.Collections.Generic;
 
 public class CreateTests
 {
     [Fact]
-    public void Create_ValidItem_ShouldReturnCreatedItem()
+    public void Post_Create_ValidItem_ReturnCreatedItem()
     {
         // Arrange
         var repositoryMock = Substitute.For<IRepository<ToDoItem>>();
@@ -39,7 +37,7 @@ public class CreateTests
     }
 
     [Fact]
-    public void Create_ItemWithExistingName_ShouldReturnConflict()
+    public void Post_Create_ItemWithExistingName_ShouldReturnConflict()
     {
         // Arrange
         var existingItem = new ToDoItem
@@ -66,5 +64,31 @@ public class CreateTests
         // Assert
         var conflictResult = Assert.IsType<ConflictObjectResult>(result);
         Assert.Equal(409, conflictResult.StatusCode);
+    }
+
+    [Fact]
+    public void Post_CreateUnhandledException_ReturnsInternalServerError()
+    {
+        // Arrange
+        var repositoryMock = Substitute.For<IRepository<ToDoItem>>();
+        repositoryMock
+            .When(r => r.Create(Arg.Any<ToDoItem>()))
+            .Do(call => { throw new Exception("500 error"); });
+
+        var controller = new ToDoItemsController(repository: repositoryMock);
+
+        var request = new ToDoItemCreateRequestDto
+        (
+            Name: "POST Item",
+            Description: "Description",
+            IsCompleted: false
+        );
+
+        // Act
+        var result = controller.Create(request);
+
+        // Assert
+        var problemResult = Assert.IsType<ObjectResult>(result);
+        Assert.Equal(500, problemResult.StatusCode);
     }
 }
