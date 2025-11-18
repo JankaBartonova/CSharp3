@@ -1,6 +1,6 @@
 @using ToDoList.Frontend.Models
 <div>
-    <h2>Dashboard</h2>
+    <h2>ToDo items dashboard</h2>
     <table>
         <thead>
             <tr>
@@ -11,7 +11,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in testData)
+            @foreach (var item in sortedData)
             {
                 <tr>
                     <td>@item.Id</td>
@@ -33,4 +33,11 @@ new ToDoItemView(3, "Zavolat mamince", "Domluvit víkend", false),
 new ToDoItemView(4, "Cvičit", "Běhání v parku", false),
 new ToDoItemView(5, "Přečíst knihu", "Kapitola 5", true)
 };
+
+    private List<ToDoItemView> sortedData = new();
+
+    protected override void OnInitialized()
+    {
+        sortedData = testData.ToList();
+    }
 }
