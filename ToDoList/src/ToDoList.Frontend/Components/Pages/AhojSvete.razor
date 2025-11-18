@@ -1,0 +1,31 @@
+﻿@page "/AhojSvete"
+@rendermode InteractiveServer
+@using System.Diagnostics
+
+<PageTitle>Ahoj Svete</PageTitle>
+
+<body>@GetGreeting("jana")</body>
+
+<hr />
+
+<p>Counter value: @counter</p>
+<button type="button" class="btn btn-primary" @onclick="IncrementCounter">Incerease counter</button>
+
+<hr />
+
+<Dashboard />
+
+@code {
+
+    private int counter = 1;
+
+    private void IncrementCounter()
+    {
+        counter++;
+    }
+
+    public string GetGreeting(string name)
+    {
+        return $"Ahoj, {name}!";
+    }
+}
