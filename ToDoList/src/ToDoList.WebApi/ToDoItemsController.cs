@@ -3,28 +3,18 @@ namespace ToDoList.WebApi;
 using Microsoft.AspNetCore.Mvc;
 using ToDoList.Domain.DTOs;
 using ToDoList.Domain.Models;
-using ToDoList.Persistence;
+using ToDoList.Persistence.Repositories;
 
 [Route("api/[controller]")] //localhost:5000/api/todoitems
 [ApiController]
 public class ToDoItemsController : ControllerBase
 {
 
-    private readonly ToDoItemsContextBase context;
-    public ToDoItemsController(ToDoItemsContextBase context)
+    private readonly IRepository<ToDoItem> repository;
+
+    public ToDoItemsController(IRepository<ToDoItem> repository)
     {
-        this.context = context;
-
-        // ToDoItem item = new ToDoItem
-        // {
-        //     ToDoItemId = 1,
-        //     Name = "Prvni ukol",
-        //     Description = "Prvni popis",
-        //     IsCompleted = false
-        // };
-
-        // context.ToDoItems.Add(item);
-        // context.SaveChanges();
+        this.repository = repository;
     }
 
     [HttpPost]
@@ -37,15 +27,14 @@ public class ToDoItemsController : ControllerBase
             return BadRequest("Name is required");
         }
 
-        if (context.ToDoItems.Any(i => i.Name == item.Name))
+        if (repository.ExistByName(item.Name))
         {
             return Conflict("Item with the same name already exists");
         }
 
         try
         {
-            context.ToDoItems.Add(item);
-            context.SaveChanges();
+            repository.Create(item);
         }
         catch (Exception ex)
         {
@@ -61,11 +50,8 @@ public class ToDoItemsController : ControllerBase
 
         try
         {
-            if (context.ToDoItems.Count() > 0)
-            {
-                result = context.ToDoItems.Select(i => new ToDoItemGetResponseDto(i.ToDoItemId, i.Name, i.Description, i.IsCompleted)).ToList();
-            }
-            else
+            result = repository.Read().Select(i => ToDoItemGetResponseDto.FromDomain(i)).ToList();
+            if (result.Count == 0)
             {
                 return Problem("No ToDos found", null, StatusCodes.Status404NotFound);
             }
@@ -81,8 +67,6 @@ public class ToDoItemsController : ControllerBase
     [HttpGet("{toDoItemId:int}")]
     public ActionResult<ToDoItemGetResponseDto?> ReadById(int toDoItemId)
     {
-        //localhost:5000/api/todoitems/1
-
         if (toDoItemId <= 0)
         {
             return BadRequest("toDoItemId must be greater than zero");
@@ -90,12 +74,12 @@ public class ToDoItemsController : ControllerBase
 
         try
         {
-            if (context.ToDoItems.Count() == 0)
+            /*if (repository.ToDoItems.Count() == 0)
             {
                 return Problem("No ToDos found", null, StatusCodes.Status404NotFound);
-            }
+            }*/
 
-            ToDoItem? item = context.ToDoItems.ToList().Find(i => i.ToDoItemId == toDoItemId);
+            ToDoItem? item = repository.ReadById(toDoItemId);
             if (item == null)
             {
                 return NotFound($"ToDo with id {toDoItemId} not found");
@@ -139,17 +123,12 @@ public class ToDoItemsController : ControllerBase
 
         try
         {
-            List<ToDoItem> items = context.ToDoItems.ToList();
-            int index = items.FindIndex(i => i.ToDoItemId == toDoItemId);
-            if (index == -1)
-            {
-                return NotFound($"ToDo with id {toDoItemId} not found");
-            }
+            repository.UpdateById(toDoItemId, item);
 
-            items[index].Name = item.Name;
-            items[index].Description = item.Description;
-            items[index].IsCompleted = item.IsCompleted;
-            context.SaveChanges();
+        }
+        catch (KeyNotFoundException)
+        {
+            return NotFound($"ToDo with id {toDoItemId} not found");
         }
         catch (Exception ex)
         {
@@ -169,15 +148,12 @@ public class ToDoItemsController : ControllerBase
 
         try
         {
-            ToDoItem? existing = context.ToDoItems.ToList().Find(i => i.ToDoItemId == toDoItemId);
-            if (existing == null)
-            {
-                return NotFound($"ToDo with id {toDoItemId} not found");
-            }
-
-            context.ToDoItems.Remove(existing);
-            context.SaveChanges();
+            repository.DeleteById(toDoItemId);
             return NoContent();
+        }
+        catch (KeyNotFoundException)
+        {
+            return NotFound($"ToDo with id {toDoItemId} not found");
         }
         catch (Exception ex)
         {

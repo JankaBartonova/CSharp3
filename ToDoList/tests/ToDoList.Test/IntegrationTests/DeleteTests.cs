@@ -4,6 +4,8 @@ using Xunit;
 using ToDoList.Domain.Models;
 using ToDoList.WebApi;
 using Microsoft.AspNetCore.Mvc;
+using ToDoList.Persistence.Repositories;
+
 //using Microsoft.AspNetCore.Http.Features;
 
 //using static ToDoList.Test.DbContextMemoryHelper;
@@ -27,7 +29,8 @@ public class DeleteTests
         var context = new ToDoItemsContextTest();
         context.ToDoItems.Add(toDoItem);
         await context.SaveChangesAsync();
-        var controller = new ToDoItemsController(context);
+        var repository = new ToDoItemsRepository(context);
+        var controller = new ToDoItemsController(repository: repository);
 
         var items = controller.Read(); // to get ID of item to be deleted
         var itemList = items.GetValue();
@@ -68,7 +71,8 @@ public class DeleteTests
         var context = new ToDoItemsContextTest();
         context.ToDoItems.Add(toDoItem);
         await context.SaveChangesAsync();
-        var controller = new ToDoItemsController(context);
+        var repository = new ToDoItemsRepository(context);
+        var controller = new ToDoItemsController(repository: repository);
 
         // get ID of last item to be sure the tested ID does not exist
         var items = controller.Read();

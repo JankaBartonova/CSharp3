@@ -3,6 +3,8 @@ namespace ToDoList.Test;
 using Xunit;
 using ToDoList.Domain.Models;
 using ToDoList.WebApi;
+using ToDoList.Persistence.Repositories;
+
 //using static ToDoList.Test.DbContextMemoryHelper;
 
 public class GetTests
@@ -31,7 +33,8 @@ public class GetTests
         context.ToDoItems.Add(toDoItem2);
         await context.SaveChangesAsync();
 
-        var controller = new ToDoItemsController(context);
+        var repository = new ToDoItemsRepository(context);
+        var controller = new ToDoItemsController(repository: repository);
 
         // Act
         var result = controller.Read();

@@ -4,6 +4,8 @@ using Xunit;
 using ToDoList.Domain.Models;
 using ToDoList.WebApi;
 using Microsoft.AspNetCore.Mvc;
+using ToDoList.Persistence.Repositories;
+
 //using static ToDoList.Test.DbContextMemoryHelper;
 
 public class GetItemTests
@@ -21,7 +23,8 @@ public class GetItemTests
 
         //using var context = CreateInMemoryContext();
         var context = new ToDoItemsContextTest();
-        var controller = new ToDoItemsController(context);
+        var repository = new ToDoItemsRepository(context);
+        var controller = new ToDoItemsController(repository: repository);
         context.ToDoItems.Add(toDoItem);
         await context.SaveChangesAsync();
 
@@ -63,7 +66,8 @@ public class GetItemTests
 
         //using var context = CreateInMemoryContext();
         var context = new ToDoItemsContextTest();
-        var controller = new ToDoItemsController(context);
+        var repository = new ToDoItemsRepository(context);
+        var controller = new ToDoItemsController(repository: repository);
         context.ToDoItems.Add(toDoItem);
         await context.SaveChangesAsync();
 
@@ -74,7 +78,6 @@ public class GetItemTests
         // Act
         var result = controller.ReadById(nonExistingId);
         var value = result.Result as ObjectResult;
-        //var value = result.GetOther<ProblemDetails, ToDoItemGetResponseDto>();
 
         // Assert
         Assert.NotNull(value);
