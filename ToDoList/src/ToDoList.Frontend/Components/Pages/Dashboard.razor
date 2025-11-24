@@ -61,13 +61,27 @@ new ToDoItemView(5, "Přečíst knihu", "Kapitola 5", true)
         sortedData = testData.ToList();
     }
 
+    /*
     private void OrderById()
     {
-        sortedData = sortedData.OrderBy(item => item.Id).ToList();
+    sortedData = sortedData.OrderBy(item => item.Id).ToList();
     }
 
     private void OrderByName()
     {
-        sortedData = sortedData.OrderBy(item => item.Name).ToList();
+    sortedData = sortedData.OrderBy(item => item.Name).ToList();
+    }
+    */
+
+    private void OrderById()
+    {
+        IToDoItemSorter sorter = new OrderById();
+        sortedData = sorter.Order(sortedData);
+    }
+
+    private void OrderByName()
+    {
+        IToDoItemSorter sorter = new OrderByName();
+        sortedData = sorter.Order(sortedData);
     }
 }
