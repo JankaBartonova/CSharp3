@@ -15,7 +15,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in testData)
+            @foreach (var item in sortedData)
             {
                 <tr>
                     <td>@item.Id</td>
@@ -28,24 +28,46 @@
     </table>
 </div>
 
-
 @code {
     private List<ToDoItemView> testData = new()
-    {
-    new ToDoItemView(1, "Nakoupit potraviny", "Mléko, chléb, vejce", false),
-    new ToDoItemView(2, "Dokončit projekt", "Implementovat všechny funkce", true),
-    new ToDoItemView(3, "Zavolat mamince", "Domluvit víkend", false),
-    new ToDoItemView(4, "Cvičit", "Běhání v parku", false),
-    new ToDoItemView(5, "Přečíst knihu", "Kapitola 5", true)
-    };
+{
+new ToDoItemView(1, "Nakoupit potraviny", "Mléko, chléb, vejce", false),
+new ToDoItemView(2, "Dokončit projekt", "Implementovat všechny funkce", true),
+new ToDoItemView(3, "Zavolat mamince", "Domluvit víkend", false),
+new ToDoItemView(4, "Cvičit", "Běhání v parku", false),
+new ToDoItemView(5, "Přečíst knihu", "Kapitola 5", true)
+};
+
+    /*
+    // When using testData directly, in <tbody> I would render testData instead of sortedData
+    // What is the advantage of having sortedData then? When loaded from a database, I might want to keep the original data
+    intact? Before saving to the database it would not be sorted.
 
     private void OrderById()
     {
-        testData = testData.OrderBy(item => item.Id).ToList();
+    testData = testData.OrderBy(item => item.Id).ToList();
     }
 
     private void OrderByName()
     {
-        testData = testData.OrderBy(item => item.Name).ToList();
+    testData = testData.OrderBy(item => item.Name).ToList();
+    }
+    */
+
+    private List<ToDoItemView> sortedData = new();
+
+    protected override void OnInitialized()
+    {
+        sortedData = testData.ToList();
+    }
+
+    private void OrderById()
+    {
+        sortedData = sortedData.OrderBy(item => item.Id).ToList();
+    }
+
+    private void OrderByName()
+    {
+        sortedData = sortedData.OrderBy(item => item.Name).ToList();
     }
 }
