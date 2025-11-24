@@ -8,8 +8,13 @@
     <table class="table table-striped">
         <thead>
             <tr>
-                <th>ID <button class="btn btn-primary" @onclick="OrderById">Order</button></th>
-                <th>Název <button class="btn btn-primary" @onclick="OrderByName">Order</button></th>
+                <th>ID
+                    <!-- bind the child's List parameter to sortedData -->
+                    <OrderByButton Field="id" @bind-List="sortedData" />
+                </th>
+                <th>Název
+                    <OrderByButton Field="name" @bind-List="sortedData" />
+                </th>
                 <th>Popis</th>
                 <th>Dokončeno</th>
             </tr>
@@ -73,15 +78,16 @@ new ToDoItemView(5, "Přečíst knihu", "Kapitola 5", true)
     }
     */
 
+    /*
     private void OrderById()
     {
-        IToDoItemSorter sorter = new OrderById();
-        sortedData = sorter.Order(sortedData);
+    IToDoItemSorter sorter = new OrderById();
+    sortedData = sorter.Order(sortedData);
     }
 
     private void OrderByName()
     {
-        IToDoItemSorter sorter = new OrderByName();
-        sortedData = sorter.Order(sortedData);
-    }
+    IToDoItemSorter sorter = new OrderByName();
+    sortedData = sorter.Order(sortedData);
+    }*/
 }

@@ -1,0 +1,40 @@
+﻿@using ToDoList.Frontend.Models
+<PageTitle>Order by Button</PageTitle>
+
+<button class="btn btn-primary" @onclick="Order">Order by</button>
+
+@code {
+
+    [Parameter]
+    public string Field { get; set; }
+
+    [Parameter]
+    public List<ToDoItemView> List { get; set; }
+
+    // EventCallback matching the bind- pattern -> @bind-List in parent
+    [Parameter]
+    public EventCallback<List<ToDoItemView>> ListChanged { get; set; }
+
+    private IToDoItemSorter sorter = new OrderById();
+
+    protected override void OnInitialized()
+    {
+        sorter = Field switch
+        {
+            "name" => new OrderByName(),
+            _ => new OrderById()
+        };
+
+        List ??= new List<ToDoItemView>();
+    }
+
+    private async Task Order()
+    {
+        var ordered = sorter.Order(List);
+        List.Clear();
+        List.AddRange(ordered);
+
+        // notify parent so it re-renders with the updated list
+        await ListChanged.InvokeAsync(List);
+    }
+}
