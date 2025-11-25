@@ -1,4 +1,9 @@
-﻿@using ToDoList.Frontend.Models
+﻿@using System.Threading.Tasks
+@using ToDoList.Frontend.Clients
+@using ToDoList.Frontend.Models
+
+@inject IToDoItemsClient ToDoItemsClient
+
 <PageTitle>Dashboard</PageTitle>
 
 <h3 class="text-primary">Dashboard</h3>
@@ -50,20 +55,21 @@ new ToDoItemView(5, "Přečíst knihu", "Kapitola 5", true)
 
     private void OrderById()
     {
-    testData = testData.OrderBy(item => item.Id).ToList();
-    }
+        testData = testData.OrderBy(item => item.Id).ToList();
+        }
 
     private void OrderByName()
     {
-    testData = testData.OrderBy(item => item.Name).ToList();
-    }
+        testData = testData.OrderBy(item => item.Name).ToList();
+        }
     */
 
     private List<ToDoItemView> sortedData = new();
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        sortedData = testData.ToList();
+        //sortedData = testData.ToList();
+        sortedData = await ToDoItemsClient.ReadItemsAsync();
     }
 
     /*
