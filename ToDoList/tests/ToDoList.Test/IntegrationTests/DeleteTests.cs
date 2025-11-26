@@ -5,6 +5,7 @@ using ToDoList.Domain.Models;
 using ToDoList.WebApi;
 using Microsoft.AspNetCore.Mvc;
 using ToDoList.Persistence.Repositories;
+using ToDoList.Test.IntegrationTests;
 
 //using Microsoft.AspNetCore.Http.Features;
 
@@ -15,6 +16,9 @@ public class DeleteTests
     [Fact]
     public async void Delete_ExistingItem_ShouldReturnNoContent()
     {
+        var context = new ToDoItemsContextTest();
+        CleanUp.CleanUpBeforeTest(context);
+
         // Arrange
         var toDoItem = new ToDoItem
         {
@@ -26,22 +30,10 @@ public class DeleteTests
         //using var context = CreateInMemoryContext();
         //var controller = new ToDoItemsController(context);
 
-        var context = new ToDoItemsContextTest();
         context.ToDoItems.Add(toDoItem);
         await context.SaveChangesAsync();
         var repository = new ToDoItemsRepository(context);
         var controller = new ToDoItemsController(repository: repository);
-
-        var items = controller.Read(); // to get ID of item to be deleted
-        var itemList = items.GetValue();
-        for (int i = 0; i < itemList.Count(); i++)
-        {
-            if (itemList.ElementAt(i).Name == "DELETE Item")
-            {
-                toDoItem.ToDoItemId = itemList.ElementAt(i).Id;
-                break;
-            }
-        }
 
         // Act
         var result = controller.DeleteById(toDoItem.ToDoItemId);
@@ -52,11 +44,16 @@ public class DeleteTests
         // Assert
         Assert.IsType<NoContentResult>(result);
         Assert.Equal(404, getItem.StatusCode);
+
+        CleanUp.CleanUpAfterTest(context);
     }
 
     [Fact]
     public async void Delete_NonExistingItem_ShouldReturnNotFound()
     {
+        var context = new ToDoItemsContextTest();
+        CleanUp.CleanUpBeforeTest(context);
+
         // Arrange
         var toDoItem = new ToDoItem
         {
@@ -68,7 +65,6 @@ public class DeleteTests
         //using var context = CreateInMemoryContext();
         //var controller = new ToDoItemsController(context);
 
-        var context = new ToDoItemsContextTest();
         context.ToDoItems.Add(toDoItem);
         await context.SaveChangesAsync();
         var repository = new ToDoItemsRepository(context);
@@ -77,7 +73,7 @@ public class DeleteTests
         // get ID of last item to be sure the tested ID does not exist
         var items = controller.Read();
         var itemList = items.GetValue();
-        var nonExistingId = itemList.Any() ? itemList.Max(x => x.Id) + 1 : 1;
+        var nonExistingId = itemList.Any() ? Int32.MaxValue : 1;
 
         // Act
         var result = controller.DeleteById(nonExistingId);
@@ -85,8 +81,6 @@ public class DeleteTests
         // Assert
         Assert.IsType<NotFoundObjectResult>(result);
 
-        // Clean up
-        context.ToDoItems.Remove(toDoItem);
-        await context.SaveChangesAsync();
+        CleanUp.CleanUpAfterTest(context);
     }
 }

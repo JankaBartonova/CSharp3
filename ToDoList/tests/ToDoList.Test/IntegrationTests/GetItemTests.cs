@@ -5,6 +5,7 @@ using ToDoList.Domain.Models;
 using ToDoList.WebApi;
 using Microsoft.AspNetCore.Mvc;
 using ToDoList.Persistence.Repositories;
+using ToDoList.Test.IntegrationTests;
 
 //using static ToDoList.Test.DbContextMemoryHelper;
 
@@ -13,6 +14,9 @@ public class GetItemTests
     [Fact]
     public async void Get_ExistingItem_ShouldReturnItem()
     {
+        var context = new ToDoItemsContextTest();
+        CleanUp.CleanUpBeforeTest(context);
+
         // Arrange
         var toDoItem = new ToDoItem
         {
@@ -22,22 +26,10 @@ public class GetItemTests
         };
 
         //using var context = CreateInMemoryContext();
-        var context = new ToDoItemsContextTest();
         var repository = new ToDoItemsRepository(context);
         var controller = new ToDoItemsController(repository: repository);
         context.ToDoItems.Add(toDoItem);
         await context.SaveChangesAsync();
-
-        var items = controller.Read(); // to get ID of item to be retrieved
-        var itemList = items.GetValue();
-        for (int i = 0; i < itemList.Count(); i++)
-        {
-            if (itemList.ElementAt(i).Name == "GET Item")
-            {
-                toDoItem.ToDoItemId = itemList.ElementAt(i).Id;
-                break;
-            }
-        }
 
         // Act
         var result = controller.ReadById(toDoItem.ToDoItemId);
@@ -48,14 +40,15 @@ public class GetItemTests
         Assert.Equal("GET Item", value.Name);
         Assert.Equal("Description", value.Description);
 
-        // Clean up
-        context.ToDoItems.Remove(toDoItem);
-        await context.SaveChangesAsync();
+        CleanUp.CleanUpAfterTest(context);
     }
 
     [Fact]
     public async void Get_NonExistingItem_ShouldReturnNotFound()
     {
+        var context = new ToDoItemsContextTest();
+        CleanUp.CleanUpBeforeTest(context);
+
         // Arrange
         var toDoItem = new ToDoItem
         {
@@ -65,7 +58,6 @@ public class GetItemTests
         };
 
         //using var context = CreateInMemoryContext();
-        var context = new ToDoItemsContextTest();
         var repository = new ToDoItemsRepository(context);
         var controller = new ToDoItemsController(repository: repository);
         context.ToDoItems.Add(toDoItem);
@@ -73,7 +65,7 @@ public class GetItemTests
 
         var items = controller.Read();
         var itemList = items.GetValue();
-        var nonExistingId = itemList.Any() ? itemList.Max(x => x.Id) + 1 : 1;
+        var nonExistingId = itemList.Any() ? Int32.MaxValue : 1;
 
         // Act
         var result = controller.ReadById(nonExistingId);
@@ -83,9 +75,7 @@ public class GetItemTests
         Assert.NotNull(value);
         Assert.Equal(404, value.StatusCode);
 
-        // Clean up
-        context.ToDoItems.Remove(toDoItem);
-        await context.SaveChangesAsync();
+        CleanUp.CleanUpAfterTest(context);
     }
 }
 

@@ -6,6 +6,7 @@ using ToDoList.Domain.DTOs;
 using ToDoList.WebApi;
 using Microsoft.AspNetCore.Mvc;
 using ToDoList.Persistence.Repositories;
+using ToDoList.Test.IntegrationTests;
 //using static ToDoList.Test.DbContextMemoryHelper;
 
 public class CreateTests
@@ -13,6 +14,10 @@ public class CreateTests
     [Fact]
     public async void Create_ValidItem_ShouldReturnCreatedItem()
     {
+        // use production code with TEST database
+        var context = new ToDoItemsContextTest();
+        CleanUp.CleanUpBeforeTest(context);
+
         // Arrange
         var request = new ToDoItemCreateRequestDto
         (
@@ -24,8 +29,6 @@ public class CreateTests
         //simulate in memory database
         //using var context = CreateInMemoryContext();
 
-        // use production code with TEST database
-        var context = new ToDoItemsContextTest();
         var repository = new ToDoItemsRepository(context);
         var controller = new ToDoItemsController(repository: repository);
 
@@ -40,14 +43,15 @@ public class CreateTests
         Assert.Equal(request.IsCompleted, createdItem.IsCompleted);
         Assert.Equal(201, createdResult.StatusCode);
 
-        // Clean up
-        context.ToDoItems.Remove(createdItem);
-        await context.SaveChangesAsync();
+        CleanUp.CleanUpAfterTest(context);
     }
 
     [Fact]
     public async void Create_ItemWithExistingName_ShouldReturnConflict()
     {
+        var context = new ToDoItemsContextTest();
+        CleanUp.CleanUpBeforeTest(context);
+
         // Arrange
         var existingItem = new ToDoItem
         {
@@ -58,7 +62,6 @@ public class CreateTests
 
         //using var context = CreateInMemoryContext();
 
-        var context = new ToDoItemsContextTest();
         context.ToDoItems.Add(existingItem);
         await context.SaveChangesAsync();
 
@@ -78,8 +81,6 @@ public class CreateTests
         var conflictResult = Assert.IsType<ConflictObjectResult>(result);
         Assert.Equal(409, conflictResult.StatusCode);
 
-        // Clean up
-        context.ToDoItems.Remove(existingItem);
-        await context.SaveChangesAsync();
+        CleanUp.CleanUpAfterTest(context);
     }
 }

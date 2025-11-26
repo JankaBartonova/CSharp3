@@ -4,6 +4,7 @@ using Xunit;
 using ToDoList.Domain.Models;
 using ToDoList.WebApi;
 using ToDoList.Persistence.Repositories;
+using ToDoList.Test.IntegrationTests;
 
 //using static ToDoList.Test.DbContextMemoryHelper;
 
@@ -12,6 +13,9 @@ public class GetTests
     [Fact]
     public async void Get_AllItems_ShouldReturnAllItems()
     {
+        var context = new ToDoItemsContextTest();
+        CleanUp.CleanUpBeforeTest(context);
+
         // Arrange
         var toDoItem1 = new ToDoItem
         {
@@ -28,8 +32,8 @@ public class GetTests
         };
 
         //using var context = CreateInMemoryContext();
-        var context = new ToDoItemsContextTest();
         context.ToDoItems.Add(toDoItem1);
+        await context.SaveChangesAsync();
         context.ToDoItems.Add(toDoItem2);
         await context.SaveChangesAsync();
 
@@ -53,9 +57,6 @@ public class GetTests
         Assert.Equal("Description 2", secondToDo.Description);
         Assert.True(secondToDo.IsCompleted);
 
-        // Clean up
-        context.ToDoItems.Remove(toDoItem1);
-        context.ToDoItems.Remove(toDoItem2);
-        await context.SaveChangesAsync();
+        CleanUp.CleanUpAfterTest(context);
     }
 }

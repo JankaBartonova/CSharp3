@@ -6,6 +6,7 @@ using ToDoList.Domain.DTOs;
 using ToDoList.WebApi;
 using Microsoft.AspNetCore.Mvc;
 using ToDoList.Persistence.Repositories;
+using ToDoList.Test.IntegrationTests;
 
 //using static ToDoList.Test.DbContextMemoryHelper;
 
@@ -14,6 +15,9 @@ public class PutTests
     [Fact]
     public async void Put_ExistingItem_ShouldReturnNoContent()
     {
+        var context = new ToDoItemsContextTest();
+        CleanUp.CleanUpBeforeTest(context);
+
         // Arrange
         var toDoItem = new ToDoItem
         {
@@ -23,22 +27,10 @@ public class PutTests
         };
 
         //using var context = CreateInMemoryContext();
-        var context = new ToDoItemsContextTest();
         context.ToDoItems.Add(toDoItem);
         await context.SaveChangesAsync();
         var repository = new ToDoItemsRepository(context);
         var controller = new ToDoItemsController(repository: repository);
-
-        var items = controller.Read(); // to get ID of item to be updated
-        var itemList = items.GetValue();
-        for (int i = 0; i < itemList.Count(); i++)
-        {
-            if (itemList.ElementAt(i).Name == "PUT Item")
-            {
-                toDoItem.ToDoItemId = itemList.ElementAt(i).Id;
-                break;
-            }
-        }
 
         var updatedItem = new ToDoItemUpdateRequestDto("Updated Item", "Updated Description", true);
 
@@ -53,14 +45,15 @@ public class PutTests
         Assert.Equal("Updated Description", getItem.Description);
         Assert.True(getItem.IsCompleted);
 
-        // Clean up
-        context.ToDoItems.Remove(toDoItem);
-        await context.SaveChangesAsync();
+        CleanUp.CleanUpAfterTest(context);
     }
 
     [Fact]
     public async void Put_NotExistingItem_ShouldReturnNotFound()
     {
+        var context = new ToDoItemsContextTest();
+        CleanUp.CleanUpBeforeTest(context);
+
         // Arrange
         var toDoItem = new ToDoItem
         {
@@ -70,7 +63,6 @@ public class PutTests
         };
 
         //using var context = CreateInMemoryContext();
-        var context = new ToDoItemsContextTest();
         context.ToDoItems.Add(toDoItem);
         await context.SaveChangesAsync();
         var repository = new ToDoItemsRepository(context);
@@ -79,7 +71,7 @@ public class PutTests
         // get ID of last item to be sure the tested ID does not exist
         var items = controller.Read();
         var itemList = items.GetValue();
-        var nonExistingId = itemList.Any() ? itemList.Max(x => x.Id) + 1 : 1;
+        var nonExistingId = itemList.Any() ? Int32.MaxValue : 1;
 
         var updatedItem = new ToDoItemUpdateRequestDto("Updated Item", "Updated Description", true);
 
@@ -90,8 +82,6 @@ public class PutTests
         Assert.NotNull(result);
         Assert.Equal(404, (result as ObjectResult)?.StatusCode);
 
-        // Clean up
-        context.ToDoItems.Remove(toDoItem);
-        await context.SaveChangesAsync();
+        CleanUp.CleanUpAfterTest(context);
     }
 }
