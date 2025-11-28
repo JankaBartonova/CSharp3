@@ -13,7 +13,7 @@ using ToDoList.Persistence.Repositories;
 public class DeleteTests
 {
     [Fact]
-    public async void Delete_ExistingItem_ShouldReturnNoContent()
+    public async Task Delete_ExistingItem_ShouldReturnNoContent()
     {
         // Arrange
         var toDoItem = new ToDoItem
@@ -32,7 +32,7 @@ public class DeleteTests
         var repository = new ToDoItemsRepository(context);
         var controller = new ToDoItemsController(repository: repository);
 
-        var items = controller.Read(); // to get ID of item to be deleted
+        var items = await controller.Read(); // to get ID of item to be deleted
         var itemList = items.GetValue();
         for (int i = 0; i < itemList.Count(); i++)
         {
@@ -44,8 +44,8 @@ public class DeleteTests
         }
 
         // Act
-        var result = controller.DeleteById(toDoItem.ToDoItemId);
-        var getDeleted = controller.ReadById(toDoItem.ToDoItemId);
+        var result = await controller.DeleteById(toDoItem.ToDoItemId);
+        var getDeleted = await controller.ReadById(toDoItem.ToDoItemId);
         //var getItem = getDeleted.Result as NotFoundObjectResult;
         var getItem = getDeleted.Result as ObjectResult;
 
@@ -62,7 +62,7 @@ public class DeleteTests
     }
 
     [Fact]
-    public async void Delete_NonExistingItem_ShouldReturnNotFound()
+    public async Task Delete_NonExistingItem_ShouldReturnNotFound()
     {
         // Arrange
         var toDoItem = new ToDoItem
@@ -82,12 +82,12 @@ public class DeleteTests
         var controller = new ToDoItemsController(repository: repository);
 
         // get ID of last item to be sure the tested ID does not exist
-        var items = controller.Read();
+        var items = await controller.Read();
         var itemList = items.GetValue();
         var nonExistingId = itemList.Any() ? Int32.MaxValue : 1;
 
         // Act
-        var result = controller.DeleteById(nonExistingId);
+        var result = await controller.DeleteById(nonExistingId);
 
         // Assert
         Assert.IsType<NotFoundObjectResult>(result);
