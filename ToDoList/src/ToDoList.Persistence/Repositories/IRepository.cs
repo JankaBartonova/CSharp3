@@ -3,9 +3,9 @@ namespace ToDoList.Persistence.Repositories;
 public interface IRepository<T>
     where T : class
 {
-    public void Create(T item);
-
     public bool ExistByName(string name);
+
+    public void Create(T item);
 
     public IEnumerable<T> Read();
 
