@@ -73,7 +73,7 @@ public class GetItemTests
 
         var items = controller.Read();
         var itemList = items.GetValue();
-        var nonExistingId = itemList.Any() ? itemList.Max(x => x.Id) + 1 : 1;
+        var nonExistingId = itemList.Any() ? Int32.MaxValue : 1;
 
         // Act
         var result = controller.ReadById(nonExistingId);

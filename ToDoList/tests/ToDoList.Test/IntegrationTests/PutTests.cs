@@ -79,7 +79,7 @@ public class PutTests
         // get ID of last item to be sure the tested ID does not exist
         var items = controller.Read();
         var itemList = items.GetValue();
-        var nonExistingId = itemList.Any() ? itemList.Max(x => x.Id) + 1 : 1;
+        var nonExistingId = itemList.Any() ? Int32.MaxValue : 1;
 
         var updatedItem = new ToDoItemUpdateRequestDto("Updated Item", "Updated Description", true);
 
