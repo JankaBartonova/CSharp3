@@ -2,9 +2,11 @@ namespace ToDoList.Persistence.Repositories;
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using ToDoList.Domain.Models;
 
-public class ToDoItemsRepository : IRepository<ToDoItem>
+public class ToDoItemsRepository : IRepositoryAsync<ToDoItem>
 {
     private readonly ToDoItemsContextBase context;
     public ToDoItemsRepository(ToDoItemsContextBase context)
@@ -12,36 +14,36 @@ public class ToDoItemsRepository : IRepository<ToDoItem>
         this.context = context;
     }
 
-    public bool ExistByName(string name)
+    public async Task<bool> ExistByNameAsync(string name)
     {
-        return context.ToDoItems.Any(i => i.Name == name);
+        return await context.ToDoItems.AnyAsync(i => i.Name == name);
     }
 
-    public void Create(ToDoItem item)
+    public async Task CreateAsync(ToDoItem item)
     {
-        context.ToDoItems.Add(item);
-        context.SaveChanges();
+        await context.ToDoItems.AddAsync(item);
+        await context.SaveChangesAsync();
     }
 
-    public IEnumerable<ToDoItem> Read()
+    public async Task<IEnumerable<ToDoItem>> ReadAsync()
     {
-        return context.ToDoItems.ToList();
+        return await context.ToDoItems.ToListAsync();
     }
 
-    public ToDoItem? ReadById(int id)
+    public async Task<ToDoItem?> ReadByIdAsync(int id)
     {
-        return context.ToDoItems.Where(i => i.ToDoItemId == id).FirstOrDefault();
+        return await context.ToDoItems.Where(i => i.ToDoItemId == id).FirstOrDefaultAsync();
     }
 
-    public void UpdateById(int id, ToDoItem item)
+    public async Task UpdateByIdAsync(int id, ToDoItem item)
     {
-        var existingItem = context.ToDoItems.Find(id);
+        var existingItem = await context.ToDoItems.FindAsync(id);
         if (existingItem != null)
         {
             existingItem.Name = item.Name;
             existingItem.Description = item.Description;
             existingItem.IsCompleted = item.IsCompleted;
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
         else
         {
@@ -49,13 +51,13 @@ public class ToDoItemsRepository : IRepository<ToDoItem>
         }
     }
 
-    public void DeleteById(int id)
+    public async Task DeleteByIdAsync(int id)
     {
-        var item = context.ToDoItems.ToList().Find(i => i.ToDoItemId == id);
+        var item = await context.ToDoItems.FindAsync(id);
         if (item != null)
         {
             context.ToDoItems.Remove(item);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
         else
         {

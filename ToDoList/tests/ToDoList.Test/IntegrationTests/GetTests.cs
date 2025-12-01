@@ -10,7 +10,7 @@ using ToDoList.Persistence.Repositories;
 public class GetTests
 {
     [Fact]
-    public async void Get_AllItems_ShouldReturnAllItems()
+    public async Task Get_AllItems_ShouldReturnAllItems()
     {
         // Arrange
         var toDoItem1 = new ToDoItem
@@ -37,7 +37,7 @@ public class GetTests
         var controller = new ToDoItemsController(repository: repository);
 
         // Act
-        var result = controller.Read();
+        var result = await controller.ReadAsync();
         var value = result.GetValue();
 
         // Assert
