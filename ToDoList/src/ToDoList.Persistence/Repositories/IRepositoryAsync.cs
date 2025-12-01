@@ -7,7 +7,7 @@ public interface IRepositoryAsync<T>
 
     public Task CreateAsync(T item);
 
-    public Task<IEnumerable<T>> Readsync();
+    public Task<IEnumerable<T>> ReadAsync();
 
     public Task<T?> ReadByIdAsync(int id);
 

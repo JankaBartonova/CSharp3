@@ -12,10 +12,10 @@ using FluentAssertions;
 public class CreateTests
 {
     [Fact]
-    public void Post_Create_ValidItem_ReturnCreatedItem()
+    public async Task Post_Create_ValidItem_ReturnCreatedItem()
     {
         // Arrange
-        var repositoryMock = Substitute.For<IRepository<ToDoItem>>();
+        var repositoryMock = Substitute.For<IRepositoryAsync<ToDoItem>>();
         var controller = new ToDoItemsController(repository: repositoryMock);
 
         var request = new ToDoItemCreateRequestDto
@@ -26,7 +26,7 @@ public class CreateTests
         );
 
         // Act
-        var result = controller.Create(request);
+        var result = await controller.CreateAsync(request);
 
         // Assert
         var createdResult = Assert.IsType<CreatedAtActionResult>(result);
@@ -38,7 +38,7 @@ public class CreateTests
     }
 
     [Fact]
-    public void Post_Create_ItemWithExistingName_ShouldReturnConflict()
+    public async Task Post_Create_ItemWithExistingName_ShouldReturnConflict()
     {
         // Arrange
         var existingItem = new ToDoItem
@@ -48,8 +48,8 @@ public class CreateTests
             IsCompleted = false
         };
 
-        var repositoryMock = Substitute.For<IRepository<ToDoItem>>();
-        repositoryMock.ExistByName(existingItem.Name).Returns(true);
+        var repositoryMock = Substitute.For<IRepositoryAsync<ToDoItem>>();
+        repositoryMock.ExistByNameAsync(existingItem.Name).Returns(true);
         var controller = new ToDoItemsController(repository: repositoryMock);
 
         var request = new ToDoItemCreateRequestDto
@@ -60,7 +60,7 @@ public class CreateTests
         );
 
         // Act
-        var result = controller.Create(request);
+        var result = await controller.CreateAsync(request);
 
         // Assert
         var conflictResult = Assert.IsType<ConflictObjectResult>(result);
@@ -68,12 +68,12 @@ public class CreateTests
     }
 
     [Fact]
-    public void Post_CreateUnhandledException_ReturnsInternalServerError()
+    public async Task Post_CreateUnhandledException_ReturnsInternalServerError()
     {
         // Arrange
-        var repositoryMock = Substitute.For<IRepository<ToDoItem>>();
+        var repositoryMock = Substitute.For<IRepositoryAsync<ToDoItem>>();
         repositoryMock
-            .When(r => r.Create(Arg.Any<ToDoItem>()))
+            .When(r => r.CreateAsync(Arg.Any<ToDoItem>()))
             .Do(call => { throw new Exception("500 error"); });
 
         var controller = new ToDoItemsController(repository: repositoryMock);
@@ -86,7 +86,7 @@ public class CreateTests
         );
 
         // Act
-        var result = controller.Create(request);
+        var result = await controller.CreateAsync(request);
 
         // Assert
         var problemResult = Assert.IsType<ObjectResult>(result);
