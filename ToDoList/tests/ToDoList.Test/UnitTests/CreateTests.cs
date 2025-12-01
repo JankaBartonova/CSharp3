@@ -22,7 +22,8 @@ public class CreateTests
         (
             Name: "POST Item",
             Description: "Description",
-            IsCompleted: false
+            IsCompleted: false,
+            Category: ""
         );
 
         // Act
@@ -56,7 +57,8 @@ public class CreateTests
         (
             Name: "POST Existing Item",
             Description: "New Description",
-            IsCompleted: true
+            IsCompleted: true,
+            Category: ""
         );
 
         // Act
@@ -82,7 +84,8 @@ public class CreateTests
         (
             Name: "POST Item",
             Description: "Description",
-            IsCompleted: false
+            IsCompleted: false,
+            Category: ""
         );
 
         // Act

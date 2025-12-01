@@ -18,7 +18,8 @@ public class CreateTests
         (
             Name: "POST Item",
             Description: "Description",
-            IsCompleted: false
+            IsCompleted: false,
+            Category: ""
         );
 
         //simulate in memory database
@@ -68,7 +69,8 @@ public class CreateTests
         (
             Name: "POST Existing Item",
             Description: "New Description",
-            IsCompleted: true
+            IsCompleted: true,
+            Category: ""
         );
 
         // Act

@@ -40,7 +40,7 @@ public class PutTests
             }
         }
 
-        var updatedItem = new ToDoItemUpdateRequestDto("Updated Item", "Updated Description", true);
+        var updatedItem = new ToDoItemUpdateRequestDto("Updated Item", "Updated Description", true, "");
 
         // Act
         var result = await controller.UpdateByIdAsync(toDoItem.ToDoItemId, updatedItem);
@@ -81,7 +81,7 @@ public class PutTests
         var itemList = items.GetValue();
         var nonExistingId = itemList.Any() ? Int32.MaxValue : 1;
 
-        var updatedItem = new ToDoItemUpdateRequestDto("Updated Item", "Updated Description", true);
+        var updatedItem = new ToDoItemUpdateRequestDto("Updated Item", "Updated Description", true, "");
 
         // Act
         var result = await controller.UpdateByIdAsync(nonExistingId, updatedItem);
