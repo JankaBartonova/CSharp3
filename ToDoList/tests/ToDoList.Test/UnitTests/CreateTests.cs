@@ -26,7 +26,7 @@ public class CreateTests
         );
 
         // Act
-        var result = await controller.Create(request);
+        var result = await controller.CreateAsync(request);
 
         // Assert
         var createdResult = Assert.IsType<CreatedAtActionResult>(result);
@@ -60,7 +60,7 @@ public class CreateTests
         );
 
         // Act
-        var result = await controller.Create(request);
+        var result = await controller.CreateAsync(request);
 
         // Assert
         var conflictResult = Assert.IsType<ConflictObjectResult>(result);
@@ -86,7 +86,7 @@ public class CreateTests
         );
 
         // Act
-        var result = await controller.Create(request);
+        var result = await controller.CreateAsync(request);
 
         // Assert
         var problemResult = Assert.IsType<ObjectResult>(result);

@@ -32,7 +32,7 @@ public class DeleteTests
         var repository = new ToDoItemsRepository(context);
         var controller = new ToDoItemsController(repository: repository);
 
-        var items = await controller.Read(); // to get ID of item to be deleted
+        var items = await controller.ReadAsync(); // to get ID of item to be deleted
         var itemList = items.GetValue();
         for (int i = 0; i < itemList.Count(); i++)
         {
@@ -44,8 +44,8 @@ public class DeleteTests
         }
 
         // Act
-        var result = await controller.DeleteById(toDoItem.ToDoItemId);
-        var getDeleted = await controller.ReadById(toDoItem.ToDoItemId);
+        var result = await controller.DeleteByIdAsync(toDoItem.ToDoItemId);
+        var getDeleted = await controller.ReadByIdAsync(toDoItem.ToDoItemId);
         //var getItem = getDeleted.Result as NotFoundObjectResult;
         var getItem = getDeleted.Result as ObjectResult;
 
@@ -82,12 +82,12 @@ public class DeleteTests
         var controller = new ToDoItemsController(repository: repository);
 
         // get ID of last item to be sure the tested ID does not exist
-        var items = await controller.Read();
+        var items = await controller.ReadAsync();
         var itemList = items.GetValue();
         var nonExistingId = itemList.Any() ? Int32.MaxValue : 1;
 
         // Act
-        var result = await controller.DeleteById(nonExistingId);
+        var result = await controller.DeleteByIdAsync(nonExistingId);
 
         // Assert
         Assert.IsType<NotFoundObjectResult>(result);

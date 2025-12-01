@@ -37,7 +37,7 @@ public class GetTests
         var controller = new ToDoItemsController(repository: repository);
 
         // Act
-        var result = await controller.Read();
+        var result = await controller.ReadAsync();
         var value = result.GetValue();
 
         // Assert

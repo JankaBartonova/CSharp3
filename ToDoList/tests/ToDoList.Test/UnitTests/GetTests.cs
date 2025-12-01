@@ -26,7 +26,7 @@ public class GetTests
         repositoryMock.ReadAsync().Returns(new List<ToDoItem> { item });
 
         //Act
-        var result = await controller.Read();
+        var result = await controller.ReadAsync();
         var resultResult = result.Result;
 
         //Assert
@@ -42,7 +42,7 @@ public class GetTests
         repositoryMock.ReadAsync().Returns(new List<ToDoItem>());
 
         //Act
-        var result = await controller.Read();
+        var result = await controller.ReadAsync();
         var resultResult = result.Result as ObjectResult;
 
         //Assert
@@ -58,7 +58,7 @@ public class GetTests
         repositoryMock.ReadAsync().Returns(Task.FromException<IEnumerable<ToDoItem>>(new Exception("Unhandled exception")));
 
         //Act
-        var result = await controller.Read();
+        var result = await controller.ReadAsync();
         var resultResult = result.Result as ObjectResult;
 
         //Assert

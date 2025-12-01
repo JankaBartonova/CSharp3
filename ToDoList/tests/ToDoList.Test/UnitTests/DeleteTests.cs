@@ -27,7 +27,7 @@ public class DeleteTests
         repositoryMock.ReadAsync().Returns(new List<ToDoItem> { item });
 
         // Act
-        var result = await controller.DeleteById(item.ToDoItemId);
+        var result = await controller.DeleteByIdAsync(item.ToDoItemId);
 
         // Assert
         Assert.IsType<NoContentResult>(result);
@@ -46,7 +46,7 @@ public class DeleteTests
                       .Do(x => { throw new KeyNotFoundException(); });
 
         // Act
-        var result = await controller.DeleteById(invalidItemId);
+        var result = await controller.DeleteByIdAsync(invalidItemId);
         var resultResult = result as ObjectResult;
 
         // Assert
@@ -67,7 +67,7 @@ public class DeleteTests
                       .Do(x => { throw new Exception("Unhandled exception"); });
 
         // Act
-        var result = await controller.DeleteById(itemId);
+        var result = await controller.DeleteByIdAsync(itemId);
         var resultResult = result as ObjectResult;
 
         // Assert
