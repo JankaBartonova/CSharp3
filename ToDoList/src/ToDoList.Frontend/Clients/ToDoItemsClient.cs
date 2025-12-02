@@ -1,6 +1,5 @@
 namespace ToDoList.Frontend.Clients;
 
-using Microsoft.VisualBasic;
 using ToDoList.Domain.DTOs;
 using ToDoList.Frontend.Models;
 
@@ -15,30 +14,31 @@ public class ToDoItemsClient : IToDoItemsClient
 
     public async Task<List<ToDoItemView>> ReadItemsAsync()
     {
-        var toDoItemsViews = new List<ToDoItemView>();
+        var toDoItemViews = new List<ToDoItemView>();
         var response = await httpClient.GetFromJsonAsync<List<ToDoItemGetResponseDto>>("api/ToDoItems");
 
-        toDoItemsViews = response.Select(dto => new ToDoItemView(
-            dto.Id,
-            dto.Name,
-            dto.Description,
-            dto.IsCompleted
-        )).ToList();
+        toDoItemViews = response.Select(dto => new ToDoItemView()
+        {
+            Id = dto.Id,
+            Name = dto.Name,
+            Description = dto.Description,
+            IsCompleted = dto.IsCompleted
+        }).ToList();
 
-        return toDoItemsViews;
+        return toDoItemViews;
     }
 
     public async Task<ToDoItemView?> ReadItemByIdAsync(int ItemId)
     {
         var response = await httpClient.GetFromJsonAsync<ToDoItemGetResponseDto>($"api/ToDoItems/{ItemId}");
 
-        var toDoItem = new ToDoItemView(
-            response.Id,
-            response.Name,
-            response.Description,
-            response.IsCompleted
-        );
-
+        var toDoItem = new ToDoItemView()
+        {
+            Id = response.Id,
+            Name = response.Name,
+            Description = response.Description,
+            IsCompleted = response.IsCompleted
+        };
         return toDoItem;
     }
 

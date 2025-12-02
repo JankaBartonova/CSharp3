@@ -14,13 +14,16 @@
     <table class="table table-striped">
         <thead>
             <tr>
-                <th>ID
-                    <!-- bind the child's List parameter to sortedData -->
-                    <OrderByButton Field="id" @bind-List="sortedData" />
+
+                <th><button class="btn btn-secondary" @onclick="OrderById">Sort by Id</button></th>
+                <th><button class="btn btn-primary" @onclick="OrderByName">Sort by Name</button></th>
+                <!--<th>ID-->
+                <!-- bind the child's List parameter to sortedData -->
+                <!--    <OrderByButton Field="id" @bind-List="sortedData" />
                 </th>
                 <th>Název
                     <OrderByButton Field="name" @bind-List="sortedData" />
-                </th>
+                </th>-->
                 <th>Popis</th>
                 <th>Dokončeno</th>
                 <th>Actions</th>
@@ -34,7 +37,7 @@
                     <td>@item.Name</td>
                     <td>@item.Description</td>
                     <td>@(item.IsCompleted ? "Dokonceny" : "Nedokonceny")</td>
-                    <td><a class="btn btn-primary" @onclick="() => EditItem(item)">Edit</a></td>
+                    <td><button class="btn btn-success" @onclick="() => EditItem(item)">Edit</button></td>
                 </tr>
             }
         </tbody>
@@ -42,14 +45,6 @@
 </div>
 
 @code {
-    private List<ToDoItemView> testData = new()
-{
-new ToDoItemView(1, "Nakoupit potraviny", "Mléko, chléb, vejce", false),
-new ToDoItemView(2, "Dokončit projekt", "Implementovat všechny funkce", true),
-new ToDoItemView(3, "Zavolat mamince", "Domluvit víkend", false),
-new ToDoItemView(4, "Cvičit", "Běhání v parku", false),
-new ToDoItemView(5, "Přečíst knihu", "Kapitola 5", true)
-};
 
     /*
     // When using testData directly, in <tbody> I would render testData instead of sortedData
@@ -67,7 +62,7 @@ new ToDoItemView(5, "Přečíst knihu", "Kapitola 5", true)
     }
     */
 
-    private List<ToDoItemView> sortedData = new();
+    private List<ToDoItemView> sortedData = new List<ToDoItemView>();
 
     protected override async Task OnInitializedAsync()
     {
@@ -80,17 +75,17 @@ new ToDoItemView(5, "Přečíst knihu", "Kapitola 5", true)
         NavigationManager.NavigateTo($"/editToDoItem/{item.Id}");
     }
 
-    /*
+
     private void OrderById()
     {
-    sortedData = sortedData.OrderBy(item => item.Id).ToList();
+        sortedData = sortedData.OrderBy(item => item.Id).ToList();
     }
 
     private void OrderByName()
     {
-    sortedData = sortedData.OrderBy(item => item.Name).ToList();
+        sortedData = sortedData.OrderBy(item => item.Name).ToList();
     }
-    */
+
 
     /*
     private void OrderById()
