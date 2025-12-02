@@ -29,7 +29,7 @@ public class GetItemTests
         repositoryMock.ReadByIdAsync(item.ToDoItemId).Returns(item);
 
         // Act
-        var result = await controller.ReadByIdAsync(item.ToDoItemId);
+        var result = await controller.ReadById(item.ToDoItemId);
 
         // Assert
         Assert.IsType<ActionResult<ToDoItemGetResponseDto>>(result);
@@ -47,7 +47,7 @@ public class GetItemTests
         repositoryMock.ReadByIdAsync(invalidItemId).Returns((ToDoItem)null);
 
         // Act
-        var result = await controller.ReadByIdAsync(invalidItemId);
+        var result = await controller.ReadById(invalidItemId);
         var resultResult = result.Result as ObjectResult;
 
         // Assert
@@ -66,7 +66,7 @@ public class GetItemTests
         repositoryMock.ReadByIdAsync(someItemId).Returns(Task.FromException<ToDoItem>(new Exception("Unhandled exception")));
 
         // Act
-        var result = await controller.ReadByIdAsync(someItemId);
+        var result = await controller.ReadById(someItemId);
         var resultResult = result.Result as ObjectResult;
 
         // Assert

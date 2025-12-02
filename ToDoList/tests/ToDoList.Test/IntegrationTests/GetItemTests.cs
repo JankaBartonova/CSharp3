@@ -29,7 +29,7 @@ public class GetItemTests
         context.ToDoItems.Add(toDoItem);
         await context.SaveChangesAsync();
 
-        var items = await controller.ReadAsync(); // to get ID of item to be retrieved
+        var items = await controller.Read(); // to get ID of item to be retrieved
         var itemList = items.GetValue();
         for (int i = 0; i < itemList.Count(); i++)
         {
@@ -41,7 +41,7 @@ public class GetItemTests
         }
 
         // Act
-        var result = await controller.ReadByIdAsync(toDoItem.ToDoItemId);
+        var result = await controller.ReadById(toDoItem.ToDoItemId);
         var value = result.GetValue();
 
         // Assert
@@ -79,7 +79,7 @@ public class GetItemTests
         var nonExistingId = Int32.MaxValue;
 
         // Act
-        var result = await controller.ReadByIdAsync(nonExistingId);
+        var result = await controller.ReadById(nonExistingId);
         var value = result.Result as ObjectResult;
 
         // Assert

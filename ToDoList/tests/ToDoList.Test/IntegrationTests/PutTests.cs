@@ -29,7 +29,7 @@ public class PutTests
         var repository = new ToDoItemsRepository(context);
         var controller = new ToDoItemsController(repository: repository);
 
-        var items = await controller.ReadAsync(); // to get ID of item to be updated
+        var items = await controller.Read(); // to get ID of item to be updated
         var itemList = items.GetValue();
         for (int i = 0; i < itemList.Count(); i++)
         {
@@ -43,8 +43,8 @@ public class PutTests
         var updatedItem = new ToDoItemUpdateRequestDto("Updated Item", "Updated Description", true, "");
 
         // Act
-        var result = await controller.UpdateByIdAsync(toDoItem.ToDoItemId, updatedItem);
-        var getResult = await controller.ReadByIdAsync(toDoItem.ToDoItemId);
+        var result = await controller.UpdateById(toDoItem.ToDoItemId, updatedItem);
+        var getResult = await controller.ReadById(toDoItem.ToDoItemId);
         var getItem = getResult.GetValue<ToDoItemGetResponseDto>();
 
         // Assert
@@ -77,14 +77,14 @@ public class PutTests
         var controller = new ToDoItemsController(repository: repository);
 
         // get ID of last item to be sure the tested ID does not exist
-        var items = await controller.ReadAsync();
+        var items = await controller.Read();
         var itemList = items.GetValue();
         var nonExistingId = itemList.Any() ? Int32.MaxValue : 1;
 
         var updatedItem = new ToDoItemUpdateRequestDto("Updated Item", "Updated Description", true, "");
 
         // Act
-        var result = await controller.UpdateByIdAsync(nonExistingId, updatedItem);
+        var result = await controller.UpdateById(nonExistingId, updatedItem);
 
         // Assert
         Assert.NotNull(result);

@@ -31,7 +31,7 @@ public class CreateTests
         var controller = new ToDoItemsController(repository: repository);
 
         // Act
-        var result = await controller.CreateAsync(request);
+        var result = await controller.Create(request);
 
         // Assert
         var createdResult = Assert.IsType<CreatedAtActionResult>(result);
@@ -74,7 +74,7 @@ public class CreateTests
         );
 
         // Act
-        var result = await controller.CreateAsync(request);
+        var result = await controller.Create(request);
 
         // Assert
         var conflictResult = Assert.IsType<ConflictObjectResult>(result);
