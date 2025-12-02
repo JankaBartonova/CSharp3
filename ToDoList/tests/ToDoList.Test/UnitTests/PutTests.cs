@@ -23,7 +23,7 @@ public class PutTests
         var updatedItem = new ToDoItemUpdateRequestDto("Updated Item", "Updated Description", true);
 
         // Act
-        var result = await controller.UpdateByIdAsync(itemId, updatedItem);
+        var result = await controller.UpdateById(itemId, updatedItem);
 
         // Assert
         Assert.IsType<NoContentResult>(result);
@@ -46,7 +46,7 @@ public class PutTests
                       .Do(x => { throw new KeyNotFoundException(); });
 
         // Act
-        var result = await controller.UpdateByIdAsync(invalidItemId, updatedItem);
+        var result = await controller.UpdateById(invalidItemId, updatedItem);
         var resultResult = result as ObjectResult;
 
         // Assert
@@ -70,7 +70,7 @@ public class PutTests
                       .Do(x => { throw new Exception("Unhandled exception"); });
 
         // Act
-        var result = await controller.UpdateByIdAsync(itemId, updatedItem);
+        var result = await controller.UpdateById(itemId, updatedItem);
         var resultResult = result as ObjectResult;
 
         // Assert

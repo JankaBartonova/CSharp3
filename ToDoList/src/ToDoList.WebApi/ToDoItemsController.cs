@@ -19,7 +19,7 @@ public class ToDoItemsController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateAsync(ToDoItemCreateRequestDto request) //localhost:5000/api/todoitems, DTO Data Transfer Object
+    public async Task<IActionResult> Create(ToDoItemCreateRequestDto request) //localhost:5000/api/todoitems, DTO Data Transfer Object
     {
         ToDoItem item = request.ToDomain();
 
@@ -41,11 +41,11 @@ public class ToDoItemsController : ControllerBase
         {
             return Problem(ex.Message, null, StatusCodes.Status500InternalServerError);
         }
-        return CreatedAtAction(nameof(ReadByIdAsync), new { toDoItemId = item.ToDoItemId }, item); // 201 + location in header + item in body
+        return CreatedAtAction(nameof(ReadById), new { toDoItemId = item.ToDoItemId }, item); // 201 + location in header + item in body
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<ToDoItemGetResponseDto>>> ReadAsync()
+    public async Task<ActionResult<IEnumerable<ToDoItemGetResponseDto>>> Read()
     {
         List<ToDoItemGetResponseDto> result = new();
 
@@ -68,7 +68,7 @@ public class ToDoItemsController : ControllerBase
     }
 
     [HttpGet("{toDoItemId:int}")]
-    public async Task<ActionResult<ToDoItemGetResponseDto?>> ReadByIdAsync(int toDoItemId)
+    public async Task<ActionResult<ToDoItemGetResponseDto?>> ReadById(int toDoItemId)
     {
         if (toDoItemId <= 0)
         {
@@ -99,7 +99,7 @@ public class ToDoItemsController : ControllerBase
     }
 
     [HttpPut("{toDoItemId:int}")]
-    public async Task<IActionResult> UpdateByIdAsync(int toDoItemId, [FromBody] ToDoItemUpdateRequestDto request)
+    public async Task<IActionResult> UpdateById(int toDoItemId, [FromBody] ToDoItemUpdateRequestDto request)
     {
 
         if (toDoItemId <= 0)
@@ -142,7 +142,7 @@ public class ToDoItemsController : ControllerBase
     }
 
     [HttpDelete("{toDoItemId:int}")]
-    public async Task<IActionResult> DeleteByIdAsync(int toDoItemId)
+    public async Task<IActionResult> DeleteById(int toDoItemId)
     {
         if (toDoItemId <= 0)
         {
