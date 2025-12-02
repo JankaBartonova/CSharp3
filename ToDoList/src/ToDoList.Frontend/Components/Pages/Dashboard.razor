@@ -3,6 +3,7 @@
 @using ToDoList.Frontend.Models
 
 @inject IToDoItemsClient ToDoItemsClient
+@inject NavigationManager NavigationManager
 
 <PageTitle>Dashboard</PageTitle>
 
@@ -22,6 +23,7 @@
                 </th>
                 <th>Popis</th>
                 <th>Dokončeno</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -32,6 +34,7 @@
                     <td>@item.Name</td>
                     <td>@item.Description</td>
                     <td>@(item.IsCompleted ? "Dokonceny" : "Nedokonceny")</td>
+                    <td><a class="btn btn-primary" @onclick="() => EditItem(item)">Edit</a></td>
                 </tr>
             }
         </tbody>
@@ -55,13 +58,13 @@ new ToDoItemView(5, "Přečíst knihu", "Kapitola 5", true)
 
     private void OrderById()
     {
-        testData = testData.OrderBy(item => item.Id).ToList();
-        }
+    testData = testData.OrderBy(item => item.Id).ToList();
+    }
 
     private void OrderByName()
     {
-        testData = testData.OrderBy(item => item.Name).ToList();
-        }
+    testData = testData.OrderBy(item => item.Name).ToList();
+    }
     */
 
     private List<ToDoItemView> sortedData = new();
@@ -70,6 +73,11 @@ new ToDoItemView(5, "Přečíst knihu", "Kapitola 5", true)
     {
         //sortedData = testData.ToList();
         sortedData = await ToDoItemsClient.ReadItemsAsync();
+    }
+
+    public void EditItem(ToDoItemView item)
+    {
+        NavigationManager.NavigateTo($"/editToDoItem/{item.Id}");
     }
 
     /*
