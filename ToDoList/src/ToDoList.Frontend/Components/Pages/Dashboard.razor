@@ -15,15 +15,15 @@
         <thead>
             <tr>
 
-                <th><button class="btn btn-secondary" @onclick="OrderById">Sort by Id</button></th>
-                <th><button class="btn btn-primary" @onclick="OrderByName">Sort by Name</button></th>
-                <!--<th>ID-->
-                <!-- bind the child's List parameter to sortedData -->
-                <!--    <OrderByButton Field="id" @bind-List="sortedData" />
+                <!--<th><button class="btn btn-secondary" @onclick="OrderById">Sort by Id</button></th>
+                <th><button class="btn btn-primary" @onclick="OrderByName">Sort by Name</button></th>-->
+                <th>ID
+                    <!-- bind the child's List parameter to sortedData -->
+                    <OrderByButton Field="id" @bind-List="sortedData" />
                 </th>
                 <th>Název
                     <OrderByButton Field="name" @bind-List="sortedData" />
-                </th>-->
+                </th>
                 <th>Popis</th>
                 <th>Dokončeno</th>
                 <th>Actions</th>
@@ -75,28 +75,25 @@
         NavigationManager.NavigateTo($"/editToDoItem/{item.Id}");
     }
 
-
-    private void OrderById()
+    /*private void OrderById()
     {
-        sortedData = sortedData.OrderBy(item => item.Id).ToList();
+    sortedData = sortedData.OrderBy(item => item.Id).ToList();
     }
 
     private void OrderByName()
     {
-        sortedData = sortedData.OrderBy(item => item.Name).ToList();
-    }
-
-
-    /*
-    private void OrderById()
-    {
-    IToDoItemSorter sorter = new OrderById();
-    sortedData = sorter.Order(sortedData);
-    }
-
-    private void OrderByName()
-    {
-    IToDoItemSorter sorter = new OrderByName();
-    sortedData = sorter.Order(sortedData);
+    sortedData = sortedData.OrderBy(item => item.Name).ToList();
     }*/
+
+    private void OrderById()
+    {
+        IToDoItemSorter sorter = new OrderById();
+        sortedData = sorter.Order(sortedData);
+    }
+
+    private void OrderByName()
+    {
+        IToDoItemSorter sorter = new OrderByName();
+        sortedData = sorter.Order(sortedData);
+    }
 }
