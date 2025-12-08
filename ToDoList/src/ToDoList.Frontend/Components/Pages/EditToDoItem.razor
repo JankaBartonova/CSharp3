@@ -1,0 +1,41 @@
+﻿@page "/editToDoItem/{ItemId:int}"
+@using ToDoList.Frontend.Clients
+@using ToDoList.Frontend.Models
+
+@inject IToDoItemsClient ToDoItemsClient
+@inject NavigationManager NavigationManager
+
+@rendermode InteractiveServer
+<b>@ItemId</b>
+
+@if (ToDoItemModel is not null)
+{
+    <EditForm Model="ToDoItemModel" FormName="EditToDoItem" OnSubmit="Submit">
+        <div class="mb-3">
+            <label for="Name" class="form-label">Name</label>
+            <InputText id="Name" @bind-Value="ToDoItemModel.Name" class="form-control" />
+        </div>
+        <InputText id="Description" @bind-Value="ToDoItemModel.Description" />
+        <InputCheckbox id="IsCompleted" @bind-Value="ToDoItemModel.IsCompleted" />
+        <button type="submit">Odeslat</button>
+    </EditForm>
+}
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        ToDoItemModel = await ToDoItemsClient.ReadItemByIdAsync(ItemId);
+    }
+
+    [Parameter]
+    public int ItemId { get; set; }
+
+    [SupplyParameterFromForm]
+    public ToDoItemView ToDoItemModel { get; set; }
+
+    public async Task Submit()
+    {
+        await ToDoItemsClient.UpdateItemAsync(ToDoItemModel);
+        NavigationManager.NavigateTo("/");
+    }
+}
