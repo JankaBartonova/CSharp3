@@ -1,4 +1,6 @@
-﻿@using ToDoList.Frontend.Models
+﻿@using System.ComponentModel.DataAnnotations
+@using System.Runtime.CompilerServices
+@using ToDoList.Frontend.Models
 <PageTitle>Order by Button</PageTitle>
 
 <button class="btn btn-primary" @onclick="Order">Order by</button>
@@ -6,10 +8,12 @@
 @code {
 
     [Parameter]
-    public string Field { get; set; }
+    [Required]
+    public string Field { get; set; } = "";
 
     [Parameter]
-    public List<ToDoItemView> List { get; set; }
+    [Required]
+    public List<ToDoItemView> List { get; set; } = new List<ToDoItemView>();
 
     // EventCallback matching the bind- pattern -> @bind-List in parent
     [Parameter]
