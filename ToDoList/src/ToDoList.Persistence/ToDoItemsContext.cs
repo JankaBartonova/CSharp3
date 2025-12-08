@@ -5,30 +5,34 @@ using ToDoList.Domain.Models;
 
 public class ToDoItemsContextBase : DbContext
 {
-    private readonly string? connectionString;
+    private readonly string connectionString;
 
-    // Runtime constructor that accepts a connection string.
+    //for migrations
+    // private readonly string? connectionString;
+
     public ToDoItemsContextBase(string connectionString)
     {
         this.connectionString = connectionString;
     }
 
-    // Design-time / DI-friendly constructor that accepts configured DbContextOptions.
+    /*//for migrations: Design-time / DI-friendly constructor that accepts configured DbContextOptions.
     public ToDoItemsContextBase(DbContextOptions options)
         : base(options)
     {
         // connectionString remains null when options are used.
-    }
+    }*/
 
     public DbSet<ToDoItem> ToDoItems { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        // Only configure the provider here if options have not been configured yet.
+        optionsBuilder.UseSqlite(connectionString);
+
+        /*//for migrations: Only configure the provider here if options have not been configured yet.
         if (!optionsBuilder.IsConfigured && !string.IsNullOrEmpty(connectionString))
         {
             optionsBuilder.UseSqlite(connectionString);
-        }
+        }*/
     }
 }
 
@@ -40,9 +44,9 @@ public class ToDoItemsContext : ToDoItemsContextBase
         this.Database.Migrate();
     }
 
-    // Add this constructor so EF/design-time code can pass configured DbContextOptions.
+    /*//for migrations: Add this constructor so EF/design-time code can pass configured DbContextOptions.
     public ToDoItemsContext(DbContextOptions<ToDoItemsContext> options)
         : base(options)
     {
-    }
+    }*/
 }

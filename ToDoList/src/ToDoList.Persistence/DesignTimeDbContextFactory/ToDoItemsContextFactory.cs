@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+/*for migrations: using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
@@ -19,4 +19,4 @@ namespace ToDoList.Persistence.DesignTimeDbContextFactory
             return new ToDoItemsContext(optionsBuilder.Options);
         }
     }
-}
+}*/
