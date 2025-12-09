@@ -17,6 +17,11 @@ public class ToDoItemsClient : IToDoItemsClient
         var toDoItemViews = new List<ToDoItemView>();
         var response = await httpClient.GetFromJsonAsync<List<ToDoItemGetResponseDto>>("api/ToDoItems");
 
+        if (response == null)
+        {
+            return toDoItemViews;
+        }
+
         toDoItemViews = response.Select(dto => new ToDoItemView()
         {
             Id = dto.Id,
@@ -47,7 +52,8 @@ public class ToDoItemsClient : IToDoItemsClient
         var itemRequest = new ToDoItemUpdateRequestDto(
             item.Name,
             item.Description,
-            item.IsCompleted
+            item.IsCompleted,
+            item.Category
         );
 
         var response = await httpClient.PutAsJsonAsync($"api/ToDoItems/{item.Id}", itemRequest);

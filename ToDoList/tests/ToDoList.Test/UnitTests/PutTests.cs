@@ -20,7 +20,7 @@ public class PutTests
         var controller = new ToDoItemsController(repository: repositoryMock);
 
         var itemId = 1;
-        var updatedItem = new ToDoItemUpdateRequestDto("Updated Item", "Updated Description", true);
+        var updatedItem = new ToDoItemUpdateRequestDto("Updated Item", "Updated Description", true, "");
 
         // Act
         var result = await controller.UpdateById(itemId, updatedItem);
@@ -41,7 +41,7 @@ public class PutTests
         var controller = new ToDoItemsController(repository: repositoryMock);
 
         var invalidItemId = 999;
-        var updatedItem = new ToDoItemUpdateRequestDto("Updated Item", "Updated Description", true);
+        var updatedItem = new ToDoItemUpdateRequestDto("Updated Item", "Updated Description", true, "");
         repositoryMock.When(x => x.UpdateByIdAsync(invalidItemId, Arg.Any<ToDoItem>()))
                       .Do(x => { throw new KeyNotFoundException(); });
 
@@ -65,7 +65,7 @@ public class PutTests
         var controller = new ToDoItemsController(repository: repositoryMock);
 
         var itemId = 1;
-        var updatedItem = new ToDoItemUpdateRequestDto("Updated Item", "Updated Description", true);
+        var updatedItem = new ToDoItemUpdateRequestDto("Updated Item", "Updated Description", true, "");
         repositoryMock.When(x => x.UpdateByIdAsync(itemId, Arg.Any<ToDoItem>()))
                       .Do(x => { throw new Exception("Unhandled exception"); });
 

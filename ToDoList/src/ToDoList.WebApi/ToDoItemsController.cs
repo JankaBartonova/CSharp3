@@ -89,7 +89,7 @@ public class ToDoItemsController : ControllerBase
             }
             else
             {
-                return Ok(new ToDoItemGetResponseDto(item.ToDoItemId, item.Name, item.Description, item.IsCompleted));
+                return Ok(new ToDoItemGetResponseDto(item.ToDoItemId, item.Name, item.Description, item.IsCompleted, item.Category));
             }
         }
         catch (Exception ex)
