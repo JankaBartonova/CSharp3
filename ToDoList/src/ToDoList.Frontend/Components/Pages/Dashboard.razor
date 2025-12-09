@@ -11,8 +11,8 @@
 
 <div>
     <h2 class="text-primary">ToDo items dashboard</h2>
-    <table class="table table-striped">
-        <thead>
+    <table class="table table-hover">
+        <thead class="table-dark">
             <tr>
 
                 <th><button class="btn btn-secondary" @onclick="OrderById">Sort by Id</button></th>
@@ -29,7 +29,7 @@
                 <th>Actions</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody class="table-secondary">
             @foreach (var item in sortedData)
             {
                 <tr>
@@ -37,7 +37,14 @@
                     <td>@item.Name</td>
                     <td>@item.Description</td>
                     <td>@(item.IsCompleted ? "Dokonceny" : "Nedokonceny")</td>
-                    <td><button class="btn btn-success" @onclick="() => EditItem(item)">Edit</button></td>
+                    <td>
+                        <input class="form-check-input fs-1 mt-0" type="checkbox" checked="@item.IsCompleted"
+                            @onchange="async () => await ToggleItemFinishedAsync(item)" />
+                        <button class="btn btn-success" @onclick="() => EditItem(item)">
+                            <i class="bi bi-pencil-fill"></i></button>
+                        <button class="btn btn-danger" @onclick="() => DeleteItem(item)">
+                            <i class="bi bi-x-square-fill"></i></button>
+                    </td>
                 </tr>
             }
         </tbody>
@@ -75,6 +82,32 @@
         NavigationManager.NavigateTo($"/editToDoItem/{item.Id}");
     }
 
+    public void DeleteItem(ToDoItemView item)
+    {
+        NavigationManager.NavigateTo($"/deleteToDoItem/{item.Id}");
+    }
+
+    public async Task ToggleItemFinishedAsync(ToDoItemView item)
+    {
+        var updatedItem = new ToDoItemView
+        {
+            Id = item.Id,
+            Name = item.Name,
+            Description = item.Description,
+            IsCompleted = !item.IsCompleted
+        };
+        await ToDoItemsClient.UpdateItemAsync(updatedItem);
+
+        sortedData = await ToDoItemsClient.ReadItemsAsync();
+
+        // OR update data locally without reloading from server
+        /*var index = sortedData.FindIndex(i => i.Id == item.Id);
+        if (index >= 0)
+        {
+        sortedData[index].IsCompleted = updatedItem.IsCompleted;
+        }
+        StateHasChanged();*/
+    }
 
     private void OrderById()
     {

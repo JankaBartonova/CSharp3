@@ -1,0 +1,37 @@
+﻿@page "/deleteToDoItem/{ItemId:int}"
+@using ToDoList.Frontend.Clients
+@using ToDoList.Frontend.Models
+
+@inject IToDoItemsClient ToDoItemsClient
+@inject NavigationManager NavigationManager
+
+@rendermode InteractiveServer
+
+<h3>Delete Item</h3>
+@if (ToDoItemModel is not null)
+{
+    <div class="alert alert-danger" role="alert">
+        Are you sure you want to delete the item: <strong>@ToDoItemModel.Name</strong>?
+    </div>
+    <button class="btn btn-danger" @onclick='() => DeleteItemAsync()'>Confirm Delete</button>
+    <button class="btn btn-secondary" @onclick='() => NavigationManager.NavigateTo("/")'>Cancel</button>
+}
+
+@code {
+    [Parameter]
+    public int ItemId { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        ToDoItemModel = await ToDoItemsClient.ReadItemByIdAsync(ItemId);
+    }
+
+    [SupplyParameterFromForm]
+    public ToDoItemView ToDoItemModel { get; set; }
+
+    private async Task DeleteItemAsync()
+    {
+        await ToDoItemsClient.DeleteItemAsync(ItemId);
+        NavigationManager.NavigateTo("/");
+    }
+}
