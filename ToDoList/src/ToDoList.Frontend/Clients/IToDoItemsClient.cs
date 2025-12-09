@@ -1,4 +1,5 @@
 namespace ToDoList.Frontend.Clients;
+
 using ToDoList.Frontend.Models;
 
 public interface IToDoItemsClient
@@ -8,4 +9,6 @@ public interface IToDoItemsClient
     public Task<ToDoItemView?> ReadItemByIdAsync(int ItemId);
 
     public Task UpdateItemAsync(ToDoItemView updatedItem);
+
+    public Task DeleteItemAsync(int ItemId);
 }
