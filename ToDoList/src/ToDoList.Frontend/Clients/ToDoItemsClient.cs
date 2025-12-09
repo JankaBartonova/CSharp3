@@ -14,7 +14,7 @@ public class ToDoItemsClient : IToDoItemsClient
 
     public async Task<List<ToDoItemView>> ReadItemsAsync()
     {
-        var toDoItemsViews = new List<ToDoItemView>();
+        var toDoItemViews = new List<ToDoItemView>();
         var response = await httpClient.GetFromJsonAsync<List<ToDoItemGetResponseDto>>("api/ToDoItems");
 
         if (response == null)
