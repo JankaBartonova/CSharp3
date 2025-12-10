@@ -4,11 +4,13 @@
 
 @inject IToDoItemsClient ToDoItemsClient
 @inject NavigationManager NavigationManager
-
 @rendermode InteractiveServer
+
+<PageTitle>Edit ToDo Item</PageTitle>
 
 @if (ToDoItemModel is not null)
 {
+    <h2 class="text-primary">Edit ToDo Item</h2>
     <EditForm Model="ToDoItemModel" FormName="EditToDoItem" OnSubmit="Submit">
         <div class="mb-3">
             <label for="Name" class="form-label">Name</label>
@@ -24,9 +26,10 @@
         </div>
         <div>
             <label for="IsCompleted" class="form-label">Completed</label>
-            <InputCheckbox class="form-check-input fs-1 mt-0" id="IsCompleted" @bind-Value="ToDoItemModel.IsCompleted" />
+            <InputCheckbox class="form-check-input form-control fs-1 mt-0" id="IsCompleted"
+                @bind-Value="ToDoItemModel.IsCompleted" />
         </div>
-        <button type="submit">Odeslat</button>
+        <button class="btn btn-primary mt-3" type="submit">Odeslat</button>
     </EditForm>
 }
 
