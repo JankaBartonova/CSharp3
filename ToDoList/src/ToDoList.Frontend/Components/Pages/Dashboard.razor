@@ -17,11 +17,11 @@
                 <th>ID
                     <OrderByButton Field="id" @bind-List="sortedData" />
                 </th>
-                <th>Název
+                <th>Name
                     <OrderByButton Field="name" @bind-List="sortedData" />
                 </th>
-                <th>Popis</th>
-                <th>Dokončeno</th>
+                <th>Description</th>
+                <th>Status</th>
                 <th>Category</th>
                 <th>Actions</th>
             </tr>
@@ -33,7 +33,7 @@
                     <td>@item.Id</td>
                     <td>@item.Name</td>
                     <td>@item.Description</td>
-                    <td>@(item.IsCompleted ? "Dokonceny" : "Nedokonceny")</td>
+                    <td>@(item.IsCompleted ? "Done!" : "Waiting")</td>
                     <td>@item.Category</td>
                     <td>
                         <input class="form-check-input fs-1 mt-0" type="checkbox" checked="@item.IsCompleted"
