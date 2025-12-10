@@ -38,7 +38,6 @@
         List.Clear();
         List.AddRange(ordered);
 
-        // notify parent so it re-renders with the updated list
         await ListChanged.InvokeAsync(List);
     }
 }

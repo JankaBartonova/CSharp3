@@ -1,7 +1,5 @@
 namespace ToDoList.Test;
 
-using Microsoft.EntityFrameworkCore;
-using ToDoList.Domain.Models;
 using ToDoList.Persistence;
 
 public class ToDoItemsContextTest : ToDoItemsContextBase

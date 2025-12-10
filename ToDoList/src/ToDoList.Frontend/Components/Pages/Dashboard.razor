@@ -14,11 +14,7 @@
     <table class="table table-hover">
         <thead class="table-dark">
             <tr>
-
-                <!--<th><button class="btn btn-secondary" @onclick="OrderById">Sort by Id</button></th>
-                                                <th><button class="btn btn-primary" @onclick="OrderByName">Sort by Name</button></th>-->
                 <th>ID
-                    <!-- bind the child's List parameter to sortedData -->
                     <OrderByButton Field="id" @bind-List="sortedData" />
                 </th>
                 <th>Název
@@ -54,28 +50,10 @@
 </div>
 
 @code {
-
-    /*
-    // When using testData directly, in <tbody> I would render testData instead of sortedData
-    // What is the advantage of having sortedData then? When loaded from a database, I might want to keep the original data
-    intact? Before saving to the database it would not be sorted.
-
-    private void OrderById()
-    {
-    testData = testData.OrderBy(item => item.Id).ToList();
-    }
-
-    private void OrderByName()
-    {
-    testData = testData.OrderBy(item => item.Name).ToList();
-    }
-    */
-
     private List<ToDoItemView> sortedData = new List<ToDoItemView>();
 
     protected override async Task OnInitializedAsync()
     {
-        //sortedData = testData.ToList();
         sortedData = await ToDoItemsClient.ReadItemsAsync();
     }
 
@@ -100,27 +78,8 @@
             IsCompleted = !item.IsCompleted
         };
         await ToDoItemsClient.UpdateItemAsync(updatedItem);
-
         sortedData = await ToDoItemsClient.ReadItemsAsync();
-
-        // OR update data locally without reloading from server
-        /*var index = sortedData.FindIndex(i => i.Id == item.Id);
-        if (index >= 0)
-        {
-        sortedData[index].IsCompleted = updatedItem.IsCompleted;
-        }
-        StateHasChanged();*/
     }
-
-    /*private void OrderById()
-    {
-    sortedData = sortedData.OrderBy(item => item.Id).ToList();
-    }
-
-    private void OrderByName()
-    {
-    sortedData = sortedData.OrderBy(item => item.Name).ToList();
-    }*/
 
     private void OrderById()
     {

@@ -77,11 +77,6 @@ public class ToDoItemsController : ControllerBase
 
         try
         {
-            /*if (repository.ToDoItems.Count() == 0)
-            {
-                return Problem("No ToDos found", null, StatusCodes.Status404NotFound);
-            }*/
-
             ToDoItem? item = await repository.ReadByIdAsync(toDoItemId);
             if (item == null)
             {

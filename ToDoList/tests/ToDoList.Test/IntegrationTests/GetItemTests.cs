@@ -58,23 +58,9 @@ public class GetItemTests
     public async Task Get_NonExistingItem_ShouldReturnNotFound()
     {
         // Arrange
-        /*var toDoItem = new ToDoItem
-        {
-            Name = "Item 1",
-            Description = "Item that does not exist",
-            IsCompleted = false
-        };*/
-
-        //using var context = CreateInMemoryContext();
         var context = new ToDoItemsContextTest();
         var repository = new ToDoItemsRepository(context);
         var controller = new ToDoItemsController(repository: repository);
-        //context.ToDoItems.Add(toDoItem);
-        //await context.SaveChangesAsync();
-
-        //var items = await controller.Read();
-        //var itemList = items.GetValue();
-        //var nonExistingId = itemList.Any() ? Int32.MaxValue : 1;
 
         var nonExistingId = Int32.MaxValue;
 
