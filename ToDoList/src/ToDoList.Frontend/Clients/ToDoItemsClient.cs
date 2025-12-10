@@ -27,7 +27,8 @@ public class ToDoItemsClient : IToDoItemsClient
             Id = dto.Id,
             Name = dto.Name,
             Description = dto.Description,
-            IsCompleted = dto.IsCompleted
+            IsCompleted = dto.IsCompleted,
+            Category = dto.Category
         }).ToList();
 
         return toDoItemViews;
@@ -42,7 +43,8 @@ public class ToDoItemsClient : IToDoItemsClient
             Id = response.Id,
             Name = response.Name,
             Description = response.Description,
-            IsCompleted = response.IsCompleted
+            IsCompleted = response.IsCompleted,
+            Category = response.Category
         };
         return toDoItem;
     }

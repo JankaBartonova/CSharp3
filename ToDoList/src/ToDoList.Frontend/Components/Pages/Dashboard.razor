@@ -2,6 +2,7 @@
 @using ToDoList.Frontend.Clients
 @using ToDoList.Frontend.Models
 
+
 @inject IToDoItemsClient ToDoItemsClient
 @inject NavigationManager NavigationManager
 
@@ -9,47 +10,49 @@
 
 <h3 class="text-primary">Dashboard</h3>
 
-<div>
-    <h2 class="text-primary">ToDo items dashboard</h2>
-    <table class="table table-hover">
-        <thead class="table-dark">
-            <tr>
-
-                <!--<th><button class="btn btn-secondary" @onclick="OrderById">Sort by Id</button></th>
-                <th><button class="btn btn-primary" @onclick="OrderByName">Sort by Name</button></th>-->
-                <th>ID
-                    <!-- bind the child's List parameter to sortedData -->
-                    <OrderByButton Field="id" @bind-List="sortedData" />
-                </th>
-                <th>Název
-                    <OrderByButton Field="name" @bind-List="sortedData" />
-                </th>
-                <th>Popis</th>
-                <th>Dokončeno</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody class="table-secondary">
-            @foreach (var item in sortedData)
-            {
+    <div>
+        <h2 class="text-primary">ToDo items dashboard</h2>
+        <table class="table table-hover">
+            <thead class="table-dark">
                 <tr>
-                    <td>@item.Id</td>
-                    <td>@item.Name</td>
-                    <td>@item.Description</td>
-                    <td>@(item.IsCompleted ? "Dokonceny" : "Nedokonceny")</td>
-                    <td>
-                        <input class="form-check-input fs-1 mt-0" type="checkbox" checked="@item.IsCompleted"
-                            @onchange="async () => await ToggleItemFinishedAsync(item)" />
-                        <button class="btn btn-success" @onclick="() => EditItem(item)">
-                            <i class="bi bi-pencil-fill"></i></button>
-                        <button class="btn btn-danger" @onclick="() => DeleteItem(item)">
-                            <i class="bi bi-x-square-fill"></i></button>
-                    </td>
+
+                    <!--<th><button class="btn btn-secondary" @onclick="OrderById">Sort by Id</button></th>
+                                                <th><button class="btn btn-primary" @onclick="OrderByName">Sort by Name</button></th>-->
+                    <th>ID
+                        <!-- bind the child's List parameter to sortedData -->
+                        <OrderByButton Field="id" @bind-List="sortedData" />
+                    </th>
+                    <th>Název
+                        <OrderByButton Field="name" @bind-List="sortedData" />
+                    </th>
+                    <th>Popis</th>
+                    <th>Dokončeno</th>
+                    <th>Category</th>
+                    <th>Actions</th>
                 </tr>
-            }
-        </tbody>
-    </table>
-</div>
+            </thead>
+            <tbody class="table-secondary">
+                @foreach (var item in sortedData)
+                {
+                    <tr>
+                        <td>@item.Id</td>
+                        <td>@item.Name</td>
+                        <td>@item.Description</td>
+                        <td>@(item.IsCompleted ? "Dokonceny" : "Nedokonceny")</td>
+                        <td>@item.Category</td>
+                        <td>
+                            <input class="form-check-input fs-1 mt-0" type="checkbox" checked="@item.IsCompleted"
+                                @onchange="async () => await ToggleItemFinishedAsync(item)" />
+                            <button class="btn btn-success" @onclick="() => EditItem(item)">
+                                <i class="bi bi-pencil-fill"></i></button>
+                            <button class="btn btn-danger" @onclick="() => DeleteItem(item)">
+                                <i class="bi bi-x-square-fill"></i></button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 
 @code {
 
@@ -94,6 +97,7 @@
             Id = item.Id,
             Name = item.Name,
             Description = item.Description,
+            Category = item.Category,
             IsCompleted = !item.IsCompleted
         };
         await ToDoItemsClient.UpdateItemAsync(updatedItem);

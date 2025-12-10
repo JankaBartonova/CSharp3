@@ -6,7 +6,6 @@
 @inject NavigationManager NavigationManager
 
 @rendermode InteractiveServer
-<b>@ItemId</b>
 
 @if (ToDoItemModel is not null)
 {
@@ -15,8 +14,18 @@
             <label for="Name" class="form-label">Name</label>
             <InputText id="Name" @bind-Value="ToDoItemModel.Name" class="form-control" />
         </div>
-        <InputText id="Description" @bind-Value="ToDoItemModel.Description" />
-        <InputCheckbox id="IsCompleted" @bind-Value="ToDoItemModel.IsCompleted" />
+        <div>
+            <label for="Description" class="form-label">Description</label>
+            <InputText id="Description" @bind-Value="ToDoItemModel.Description" class="form-control" />
+        </div>
+        <div>
+            <label for="Category" class="form-label">Category</label>
+            <InputText id="Category" @bind-Value="ToDoItemModel.Category" class="form-control" />
+        </div>
+        <div>
+            <label for="IsCompleted" class="form-label">Completed</label>
+            <InputCheckbox class="form-check-input fs-1 mt-0" id="IsCompleted" @bind-Value="ToDoItemModel.IsCompleted" />
+        </div>
         <button type="submit">Odeslat</button>
     </EditForm>
 }
