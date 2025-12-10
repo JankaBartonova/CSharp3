@@ -8,6 +8,8 @@ public interface IToDoItemsClient
 
     public Task<ToDoItemView?> ReadItemByIdAsync(int ItemId);
 
+    public Task CreateItemAsync(ToDoItemView item);
+
     public Task UpdateItemAsync(ToDoItemView updatedItem);
 
     public Task DeleteItemAsync(int ItemId);

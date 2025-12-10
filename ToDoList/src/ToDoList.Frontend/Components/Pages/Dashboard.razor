@@ -48,6 +48,9 @@
         </tbody>
     </table>
 </div>
+<div>
+    <button class="btn btn-primary" @onclick="() => CreateItem()"><i class="bi bi-plus-lg"></i></button>
+</div>
 
 @code {
     private List<ToDoItemView> sortedData = new List<ToDoItemView>();
@@ -55,6 +58,11 @@
     protected override async Task OnInitializedAsync()
     {
         sortedData = await ToDoItemsClient.ReadItemsAsync();
+    }
+
+    public void CreateItem()
+    {
+        NavigationManager.NavigateTo($"/createToDoItem");
     }
 
     public void EditItem(ToDoItemView item)

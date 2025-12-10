@@ -1,0 +1,46 @@
+﻿@page "/createToDoItem"
+@using ToDoList.Frontend.Clients
+@using ToDoList.Frontend.Models
+
+@inject IToDoItemsClient ToDoItemsClient
+@inject NavigationManager NavigationManager
+@rendermode InteractiveServer
+
+<PageTitle>Create ToDo Item</PageTitle>
+
+<h2 class="text-primary">Create ToDo Item</h2>
+<EditForm Model="ToDoItemModel" FormName="EditToDoItem" OnSubmit="Submit">
+    <div class="labelInputGroup">
+        <label for="Name" class="form-label">Name</label>
+        <InputText id="Name" @bind-Value="ToDoItemModel.Name" class="form-control" />
+    </div>
+    <div class="labelInputGroup">
+        <label for="Description" class="form-label">Description</label>
+        <InputText id="Description" @bind-Value="ToDoItemModel.Description" class="form-control" />
+    </div>
+    <div class="labelInputGroup">
+        <label for="Category" class="form-label">Category</label>
+        <InputText id="Category" @bind-Value="ToDoItemModel.Category" class="form-control" />
+    </div>
+    <div class="labelInputGroup">
+        <label for="IsCompleted" class="form-label">Completed</label>
+        <InputCheckbox class="form-check-input form-control fs-1 mt-0" id="IsCompleted"
+            @bind-Value="ToDoItemModel.IsCompleted" />
+    </div>
+    <button class="btn btn-primary mt-3" type="submit">Submit</button>
+</EditForm>
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        ToDoItemModel = new ToDoItemView();
+    }
+
+    public ToDoItemView ToDoItemModel { get; set; }
+
+    public async Task Submit()
+    {
+        await ToDoItemsClient.CreateItemAsync(ToDoItemModel);
+        NavigationManager.NavigateTo("/");
+    }
+}
