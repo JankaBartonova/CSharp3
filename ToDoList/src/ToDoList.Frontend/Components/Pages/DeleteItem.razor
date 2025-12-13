@@ -4,18 +4,21 @@
 
 @inject IToDoItemsClient ToDoItemsClient
 @inject NavigationManager NavigationManager
-
 @rendermode InteractiveServer
 
-<h3>Delete Item</h3>
-@if (ToDoItemModel is not null)
-{
-    <div class="alert alert-danger" role="alert">
-        Are you sure you want to delete the item: <strong>@ToDoItemModel.Name</strong>?
-    </div>
-    <button class="btn btn-danger" @onclick='() => DeleteItemAsync()'>Confirm Delete</button>
-    <button class="btn btn-secondary" @onclick='() => NavigationManager.NavigateTo("/")'>Cancel</button>
-}
+<PageTitle>Delete ToDo Item</PageTitle>
+
+<div>
+    <h2 class="text-primary">Delete ToDo Item</h2>
+    @if (ToDoItemModel is not null)
+    {
+        <div class="alert alert-danger" role="alert">
+            Are you sure you want to delete the item: <strong>@ToDoItemModel.Name</strong>?
+        </div>
+        <button class="btn btn-danger" @onclick='() => DeleteItemAsync()'>Delete</button>
+        <button class="btn btn-secondary" @onclick='() => NavigationManager.NavigateTo("/")'>Cancel</button>
+    }
+</div>
 
 @code {
     [Parameter]

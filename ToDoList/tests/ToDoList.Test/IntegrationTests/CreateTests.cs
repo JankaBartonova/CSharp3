@@ -18,7 +18,8 @@ public class CreateTests
         (
             Name: "POST Item",
             Description: "Description",
-            IsCompleted: false
+            IsCompleted: false,
+            Category: "AAA"
         );
 
         //simulate in memory database
@@ -38,6 +39,7 @@ public class CreateTests
         Assert.Equal(request.Name, createdItem.Name);
         Assert.Equal(request.Description, createdItem.Description);
         Assert.Equal(request.IsCompleted, createdItem.IsCompleted);
+        Assert.Equal(request.Category, createdItem.Category);
         Assert.Equal(201, createdResult.StatusCode);
 
         // Clean up
@@ -68,7 +70,8 @@ public class CreateTests
         (
             Name: "POST Existing Item",
             Description: "New Description",
-            IsCompleted: true
+            IsCompleted: true,
+            Category: "AAA"
         );
 
         // Act

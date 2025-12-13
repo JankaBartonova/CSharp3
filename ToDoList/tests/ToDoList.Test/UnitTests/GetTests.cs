@@ -21,7 +21,8 @@ public class GetTests
             ToDoItemId = 1,
             Name = "Test Item 1",
             Description = "Description 1",
-            IsCompleted = false
+            IsCompleted = false,
+            Category = "AAA"
         };
         repositoryMock.ReadAsync().Returns(new List<ToDoItem> { item });
 

@@ -17,14 +17,16 @@ public class GetTests
         {
             Name = "Test Item 1",
             Description = "Description 1",
-            IsCompleted = false
+            IsCompleted = false,
+            Category = "AAA"
         };
 
         var toDoItem2 = new ToDoItem
         {
             Name = "Test Item 2",
             Description = "Description 2",
-            IsCompleted = true
+            IsCompleted = true,
+            Category = "AAA"
         };
 
         //using var context = CreateInMemoryContext();
@@ -47,11 +49,13 @@ public class GetTests
         Assert.Equal("Test Item 1", firstToDo.Name);
         Assert.Equal("Description 1", firstToDo.Description);
         Assert.False(firstToDo.IsCompleted);
+        Assert.Equal("AAA", firstToDo.Category);
 
         var secondToDo = value.Skip(1).First();
         Assert.Equal("Test Item 2", secondToDo.Name);
         Assert.Equal("Description 2", secondToDo.Description);
         Assert.True(secondToDo.IsCompleted);
+        Assert.Equal("AAA", secondToDo.Category);
 
         // Clean up
         context.ToDoItems.Remove(toDoItem1);

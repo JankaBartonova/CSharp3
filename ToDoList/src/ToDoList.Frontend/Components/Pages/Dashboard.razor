@@ -7,25 +7,22 @@
 
 <PageTitle>Dashboard</PageTitle>
 
-<h3 class="text-primary">Dashboard</h3>
+<h1 class="text-primary">Dashboard</h1>
 
 <div>
     <h2 class="text-primary">ToDo items dashboard</h2>
     <table class="table table-hover">
         <thead class="table-dark">
             <tr>
-
-                <th><button class="btn btn-secondary" @onclick="OrderById">Sort by Id</button></th>
-                <th><button class="btn btn-primary" @onclick="OrderByName">Sort by Name</button></th>
-                <!--<th>ID-->
-                <!-- bind the child's List parameter to sortedData -->
-                <!--    <OrderByButton Field="id" @bind-List="sortedData" />
+                <th>ID
+                    <OrderByButton Field="id" @bind-List="sortedData" />
                 </th>
-                <th>Název
+                <th>Name
                     <OrderByButton Field="name" @bind-List="sortedData" />
-                </th>-->
-                <th>Popis</th>
-                <th>Dokončeno</th>
+                </th>
+                <th>Description</th>
+                <th>Status</th>
+                <th>Category</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -36,7 +33,8 @@
                     <td>@item.Id</td>
                     <td>@item.Name</td>
                     <td>@item.Description</td>
-                    <td>@(item.IsCompleted ? "Dokonceny" : "Nedokonceny")</td>
+                    <td>@(item.IsCompleted ? "Done!" : "Waiting")</td>
+                    <td>@item.Category</td>
                     <td>
                         <input class="form-check-input fs-1 mt-0" type="checkbox" checked="@item.IsCompleted"
                             @onchange="async () => await ToggleItemFinishedAsync(item)" />
@@ -50,31 +48,21 @@
         </tbody>
     </table>
 </div>
+<div>
+    <button class="btn btn-primary" @onclick="() => CreateItem()"><i class="bi bi-plus-lg"></i></button>
+</div>
 
 @code {
-
-    /*
-    // When using testData directly, in <tbody> I would render testData instead of sortedData
-    // What is the advantage of having sortedData then? When loaded from a database, I might want to keep the original data
-    intact? Before saving to the database it would not be sorted.
-
-    private void OrderById()
-    {
-    testData = testData.OrderBy(item => item.Id).ToList();
-    }
-
-    private void OrderByName()
-    {
-    testData = testData.OrderBy(item => item.Name).ToList();
-    }
-    */
-
     private List<ToDoItemView> sortedData = new List<ToDoItemView>();
 
     protected override async Task OnInitializedAsync()
     {
-        //sortedData = testData.ToList();
         sortedData = await ToDoItemsClient.ReadItemsAsync();
+    }
+
+    public void CreateItem()
+    {
+        NavigationManager.NavigateTo($"/createToDoItem");
     }
 
     public void EditItem(ToDoItemView item)
@@ -94,42 +82,22 @@
             Id = item.Id,
             Name = item.Name,
             Description = item.Description,
+            Category = item.Category,
             IsCompleted = !item.IsCompleted
         };
         await ToDoItemsClient.UpdateItemAsync(updatedItem);
-
         sortedData = await ToDoItemsClient.ReadItemsAsync();
-
-        // OR update data locally without reloading from server
-        /*var index = sortedData.FindIndex(i => i.Id == item.Id);
-        if (index >= 0)
-        {
-        sortedData[index].IsCompleted = updatedItem.IsCompleted;
-        }
-        StateHasChanged();*/
     }
 
     private void OrderById()
     {
-        sortedData = sortedData.OrderBy(item => item.Id).ToList();
+        IToDoItemSorter sorter = new OrderById();
+        sortedData = sorter.Order(sortedData);
     }
 
     private void OrderByName()
     {
-        sortedData = sortedData.OrderBy(item => item.Name).ToList();
+        IToDoItemSorter sorter = new OrderByName();
+        sortedData = sorter.Order(sortedData);
     }
-
-
-    /*
-    private void OrderById()
-    {
-    IToDoItemSorter sorter = new OrderById();
-    sortedData = sorter.Order(sortedData);
-    }
-
-    private void OrderByName()
-    {
-    IToDoItemSorter sorter = new OrderByName();
-    sortedData = sorter.Order(sortedData);
-    }*/
 }

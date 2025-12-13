@@ -1,15 +1,19 @@
-﻿@using ToDoList.Frontend.Models
+﻿@using System.ComponentModel.DataAnnotations
+@using System.Runtime.CompilerServices
+@using ToDoList.Frontend.Models
 <PageTitle>Order by Button</PageTitle>
 
-<button class="btn btn-primary" @onclick="Order">Order by</button>
+<button class="btn btn-primary ml-10" @onclick="Order"><i class="bi bi-arrow-down"></i></button>
 
 @code {
 
     [Parameter]
-    public string Field { get; set; }
+    [Required]
+    public string Field { get; set; } = "";
 
     [Parameter]
-    public List<ToDoItemView> List { get; set; }
+    [Required]
+    public List<ToDoItemView> List { get; set; } = new List<ToDoItemView>();
 
     // EventCallback matching the bind- pattern -> @bind-List in parent
     [Parameter]
@@ -34,7 +38,6 @@
         List.Clear();
         List.AddRange(ordered);
 
-        // notify parent so it re-renders with the updated list
         await ListChanged.InvokeAsync(List);
     }
 }

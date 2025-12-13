@@ -5,7 +5,6 @@ using ToDoList.Domain.Models;
 using ToDoList.WebApi;
 using Microsoft.AspNetCore.Mvc;
 using ToDoList.Persistence.Repositories;
-using Humanizer;
 
 //using static ToDoList.Test.DbContextMemoryHelper;
 
@@ -19,7 +18,8 @@ public class GetItemTests
         {
             Name = "GET Item",
             Description = "Description",
-            IsCompleted = false
+            IsCompleted = false,
+            Category = "AAA"
         };
 
         //using var context = CreateInMemoryContext();
@@ -48,6 +48,7 @@ public class GetItemTests
         Assert.NotNull(value);
         Assert.Equal("GET Item", value.Name);
         Assert.Equal("Description", value.Description);
+        Assert.Equal("AAA", value.Category);
 
         // Clean up
         context.ToDoItems.Remove(toDoItem);
@@ -58,23 +59,9 @@ public class GetItemTests
     public async Task Get_NonExistingItem_ShouldReturnNotFound()
     {
         // Arrange
-        /*var toDoItem = new ToDoItem
-        {
-            Name = "Item 1",
-            Description = "Item that does not exist",
-            IsCompleted = false
-        };*/
-
-        //using var context = CreateInMemoryContext();
         var context = new ToDoItemsContextTest();
         var repository = new ToDoItemsRepository(context);
         var controller = new ToDoItemsController(repository: repository);
-        //context.ToDoItems.Add(toDoItem);
-        //await context.SaveChangesAsync();
-
-        //var items = await controller.Read();
-        //var itemList = items.GetValue();
-        //var nonExistingId = itemList.Any() ? Int32.MaxValue : 1;
 
         var nonExistingId = Int32.MaxValue;
 
