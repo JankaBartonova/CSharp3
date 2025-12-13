@@ -9,18 +9,22 @@
 <PageTitle>Create ToDo Item</PageTitle>
 
 <h2 class="text-primary">Create ToDo Item</h2>
-<EditForm Model="ToDoItemModel" FormName="EditToDoItem" OnSubmit="Submit">
+<EditForm Model="ToDoItemModel" FormName="EditToDoItem" OnValidSubmit="Submit">
+    <DataAnnotationsValidator />
     <div class="inputGroupMarginTop">
         <label for="Name" class="form-label">Name</label>
         <InputText id="Name" @bind-Value="ToDoItemModel.Name" class="form-control" />
+        <ValidationMessage For="() => ToDoItemModel.Name" />
     </div>
     <div class="inputGroupMarginTop">
         <label for="Description" class="form-label">Description</label>
         <InputText id="Description" @bind-Value="ToDoItemModel.Description" class="form-control" />
+        <ValidationMessage For="() => ToDoItemModel.Description" />
     </div>
     <div class="inputGroupMarginTop">
         <label for="Category" class="form-label">Category</label>
         <InputText id="Category" @bind-Value="ToDoItemModel.Category" class="form-control" />
+        <ValidationMessage For="() => ToDoItemModel.Category" />
     </div>
     <div class="inputGroupMarginTop">
         <label for="IsCompleted" class="form-label">Completed</label>

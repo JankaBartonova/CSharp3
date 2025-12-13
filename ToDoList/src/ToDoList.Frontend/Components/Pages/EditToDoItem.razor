@@ -11,7 +11,8 @@
 @if (ToDoItemModel is not null)
 {
     <h2 class="text-primary">Edit ToDo Item</h2>
-    <EditForm Model="ToDoItemModel" FormName="EditToDoItem" OnSubmit="Submit">
+    <EditForm Model="ToDoItemModel" FormName="EditToDoItem" OnValidSubmit="Submit">
+        <DataAnnotationsValidator />
         <div class="inputGroupMarginTop">
             <label for="Name" class="form-label">Name</label>
             <InputText id="Name" @bind-Value="ToDoItemModel.Name" class="form-control" />
