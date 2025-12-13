@@ -20,7 +20,7 @@ public class PutTests
         var controller = new ToDoItemsController(repository: repositoryMock);
 
         var itemId = 1;
-        var updatedItem = new ToDoItemUpdateRequestDto("Updated Item", "Updated Description", true, "");
+        var updatedItem = new ToDoItemUpdateRequestDto("Updated Item", "Updated Description", true, "AAA");
 
         // Act
         var result = await controller.UpdateById(itemId, updatedItem);
@@ -30,7 +30,8 @@ public class PutTests
         repositoryMock.Received(1).UpdateByIdAsync(itemId, Arg.Is<ToDoItem>(i =>
             i.Name == updatedItem.Name &&
             i.Description == updatedItem.Description &&
-            i.IsCompleted == updatedItem.IsCompleted));
+            i.IsCompleted == updatedItem.IsCompleted &&
+            i.Category == updatedItem.Category));
     }
 
     [Fact]
@@ -41,7 +42,7 @@ public class PutTests
         var controller = new ToDoItemsController(repository: repositoryMock);
 
         var invalidItemId = 999;
-        var updatedItem = new ToDoItemUpdateRequestDto("Updated Item", "Updated Description", true, "");
+        var updatedItem = new ToDoItemUpdateRequestDto("Updated Item", "Updated Description", true, "AAA");
         repositoryMock.When(x => x.UpdateByIdAsync(invalidItemId, Arg.Any<ToDoItem>()))
                       .Do(x => { throw new KeyNotFoundException(); });
 
@@ -54,7 +55,8 @@ public class PutTests
         repositoryMock.Received(1).UpdateByIdAsync(invalidItemId, Arg.Is<ToDoItem>(i =>
             i.Name == updatedItem.Name &&
             i.Description == updatedItem.Description &&
-            i.IsCompleted == updatedItem.IsCompleted));
+            i.IsCompleted == updatedItem.IsCompleted &&
+            i.Category == updatedItem.Category));
     }
 
     [Fact]
@@ -78,6 +80,7 @@ public class PutTests
         repositoryMock.Received(1).UpdateByIdAsync(itemId, Arg.Is<ToDoItem>(i =>
             i.Name == updatedItem.Name &&
             i.Description == updatedItem.Description &&
-            i.IsCompleted == updatedItem.IsCompleted));
+            i.IsCompleted == updatedItem.IsCompleted &&
+            i.Category == updatedItem.Category));
     }
 }

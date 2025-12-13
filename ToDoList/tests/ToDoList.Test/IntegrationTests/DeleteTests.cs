@@ -20,7 +20,8 @@ public class DeleteTests
         {
             Name = "DELETE Item",
             Description = "Item to be deleted",
-            IsCompleted = false
+            IsCompleted = false,
+            Category = "AAA"
         };
 
         //using var context = CreateInMemoryContext();
@@ -69,7 +70,8 @@ public class DeleteTests
         {
             Name = "DELETE Item 1",
             Description = "Item that does not exist",
-            IsCompleted = false
+            IsCompleted = false,
+            Category = "AAA"
         };
 
         //using var context = CreateInMemoryContext();

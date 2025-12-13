@@ -7,7 +7,6 @@ using ToDoList.WebApi;
 using Microsoft.AspNetCore.Mvc;
 using NSubstitute;
 using ToDoList.Persistence.Repositories;
-using FluentAssertions;
 
 public class CreateTests
 {
@@ -23,7 +22,7 @@ public class CreateTests
             Name: "POST Item",
             Description: "Description",
             IsCompleted: false,
-            Category: ""
+            Category: "AAA"
         );
 
         // Act
@@ -35,6 +34,7 @@ public class CreateTests
         Assert.Equal(request.Name, createdItem.Name);
         Assert.Equal(request.Description, createdItem.Description);
         Assert.Equal(request.IsCompleted, createdItem.IsCompleted);
+        Assert.Equal(request.Category, createdItem.Category);
         Assert.Equal(201, createdResult.StatusCode);
     }
 
@@ -58,7 +58,7 @@ public class CreateTests
             Name: "POST Existing Item",
             Description: "New Description",
             IsCompleted: true,
-            Category: ""
+            Category: "AAA"
         );
 
         // Act
@@ -85,7 +85,7 @@ public class CreateTests
             Name: "POST Item",
             Description: "Description",
             IsCompleted: false,
-            Category: ""
+            Category: "AAA"
         );
 
         // Act

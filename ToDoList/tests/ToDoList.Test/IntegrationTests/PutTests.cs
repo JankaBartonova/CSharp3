@@ -19,7 +19,8 @@ public class PutTests
         {
             Name = "PUT Item",
             Description = "Description",
-            IsCompleted = false
+            IsCompleted = false,
+            Category = "AAA"
         };
 
         //using var context = CreateInMemoryContext();
@@ -40,7 +41,7 @@ public class PutTests
             }
         }
 
-        var updatedItem = new ToDoItemUpdateRequestDto("Updated Item", "Updated Description", true, "");
+        var updatedItem = new ToDoItemUpdateRequestDto("Updated Item", "Updated Description", true, "AAA");
 
         // Act
         var result = await controller.UpdateById(toDoItem.ToDoItemId, updatedItem);
@@ -52,6 +53,7 @@ public class PutTests
         Assert.Equal("Updated Item", getItem.Name);
         Assert.Equal("Updated Description", getItem.Description);
         Assert.True(getItem.IsCompleted);
+        Assert.Equal("AAA", getItem.Category);
 
         // Clean up
         context.ToDoItems.Remove(toDoItem);
@@ -66,7 +68,8 @@ public class PutTests
         {
             Name = "PUT not existing Item",
             Description = "Description",
-            IsCompleted = false
+            IsCompleted = false,
+            Category = "AAA"
         };
 
         //using var context = CreateInMemoryContext();
@@ -81,7 +84,7 @@ public class PutTests
         var itemList = items.GetValue();
         var nonExistingId = itemList.Any() ? Int32.MaxValue : 1;
 
-        var updatedItem = new ToDoItemUpdateRequestDto("Updated Item", "Updated Description", true, "");
+        var updatedItem = new ToDoItemUpdateRequestDto("Updated Item", "Updated Description", true, "AAA");
 
         // Act
         var result = await controller.UpdateById(nonExistingId, updatedItem);
